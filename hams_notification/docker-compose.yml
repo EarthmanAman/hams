@@ -34,7 +34,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: hams_notification_rabbitmq
-    command: bash -c 'dockerize -wait tcp://rabbitmq:5672 -timeout 180s && python consumer.py'
+    command: bash -c 'dockerize -wait tcp://rabbitmq:5672 -timeout 180s && python user_consumer.py && python hams_appointment_consumer.py && python summary_consumer.py'
     depends_on:
       - hams_notification_celery
       - rabbitmq
