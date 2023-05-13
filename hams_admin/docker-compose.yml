@@ -1,0 +1,101 @@
+version: '3.8'
+
+services:
+  hams_admin:
+    build: .
+    container_name: hams_admin
+    command: bash -c "dockerize -wait tcp://hams_admin_pgdb:5432 -timeout 30s && python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - RABBITMQ_BROKER_URL=amqps://knvwhrhu:i8F2dnkWj8XRUu0WRZ2gTcNa_XkvCrkD@turkey.rmq.cloudamqp.com/knvwhrhu
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "8001:8000"
+    depends_on:
+      - hams_admin_pgdb
+
+    networks:
+      hams_admin_net:
+        ipv4_address: 172.16.239.2
+
+  hams_admin_pgdb:
+    image: postgres:15-alpine
+    container_name: hams_admin_pgdb
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5434:5432"
+    restart: always
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      
+    networks:
+      hams_admin_net:
+        ipv4_address: 172.16.239.4
+  
+  hams_admin_pgadmin:
+    container_name: hams_admin_pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: hashimathman.info@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: earthman
+    ports:
+      - "5052:80"
+    volumes:
+      - ./data/pgadmin-data:/var/lib/pgadmin
+    networks:
+      hams_admin_net:
+        ipv4_address: 172.16.239.5
+
+  rabbitmq:
+    image: rabbitmq:3-alpine
+    ports:
+      - "5673:5672" # RabbitMQ port
+      - "15673:15672" # RabbitMQ management UI port
+    volumes:
+      - ./rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      hams_admin_net:
+        ipv4_address: 172.16.239.7
+  
+  hams_admin_rabbitmq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hams_admin_rabbitmq
+    command: 'python consumer.py'
+    depends_on:
+      - hams_admin
+      - hams_admin_celery
+
+  hams_admin_celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hams_admin_celery
+    command: celery -A hams_admin worker -l INFO
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - hams_admin
+      - rabbitmq
+
+    networks:
+      hams_admin_net:
+        ipv4_address: 172.16.239.3
+
+networks:
+  hams_admin_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.239.0/24

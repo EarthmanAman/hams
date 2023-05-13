@@ -1,0 +1,124 @@
+version: '3.8'
+
+services:
+  hams_appointment:
+    build: .
+    container_name: hams_appointment
+    command: bash -c "dockerize -wait tcp://hams_appointment_pgdb:5432 -timeout 30s && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - RABBITMQ_BROKER_URL=amqps://knvwhrhu:i8F2dnkWj8XRUu0WRZ2gTcNa_XkvCrkD@turkey.rmq.cloudamqp.com/knvwhrhu
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "8002:8000"
+    depends_on:
+      - hams_appointment_pgdb
+
+    networks:
+      hams_appointment_net:
+        ipv4_address: 172.16.240.2
+ 
+  hams_appointment_pgdb:
+    image: postgres:15-alpine
+    container_name: hams_appointment_pgdb
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5435:5432"
+    restart: always
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      hams_appointment_net:
+        ipv4_address: 172.16.240.4
+  
+  hams_appointment_pgadmin:
+    container_name: hams_appointment_pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: hashimathman.info@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: earthman
+    ports:
+      - "5053:80"
+    volumes:
+      - ./data/pgadmin-data:/var/lib/pgadmin
+    networks:
+      hams_appointment_net:
+        ipv4_address: 172.16.240.5
+
+  rabbitmq:
+    image: rabbitmq:3-alpine
+    ports:
+      - "5674:5672" # RabbitMQ port
+      - "15674:15672" # RabbitMQ management UI port
+    volumes:
+      - ./rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      hams_appointment_net:
+        ipv4_address: 172.16.240.8
+
+  hams_appointment_rabbitmq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hams_appointment_rabbitmq
+    command: bash -c "dockerize -wait tcp://hams_appointment_pgdb:5432 -timeout 60s && python consumer.py" 
+    depends_on:
+      - hams_appointment
+      - hams_appointment_pgdb
+
+    networks:
+      hams_appointment_net:
+        ipv4_address: 172.16.240.7
+
+
+  hams_appointment_celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hams_appointment_celery
+    command: celery -A hams_appointment worker -l INFO
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - hams_appointment
+      - rabbitmq
+
+    networks:
+      hams_appointment_net:
+        ipv4_address: 172.16.240.3
+    
+  # hams_appointment_celery_beat:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: hams_appointment_celery_beat
+  #   command: celery -A hams_appointment beat -l INFO
+  #   volumes:
+  #     - .:/usr/src/app
+  #   depends_on:
+  #     - hams_appointment
+  #     - rabbitmq
+
+  #   networks:
+  #     hams_appointment_net:
+  #       ipv4_address: 172.16.240.6
+
+
+networks:
+  hams_appointment_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.240.0/24
