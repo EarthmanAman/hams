@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  hams_notification:
+    build: .
+    container_name: hams_notification
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - RABBITMQ_BROKER_URL=amqps://knvwhrhu:i8F2dnkWj8XRUu0WRZ2gTcNa_XkvCrkD@turkey.rmq.cloudamqp.com/knvwhrhu
+      - TWILIO_ACCOUNT_SID=ACbca27343716894de4a14fb24505a7fb6
+      - TWILIO_AUTH_TOKEN=fe7b3d794c2c7c4a9257db1ba83cb9fb
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "8004:8000"
+
+    networks:
+      hams_notification_net:
+        ipv4_address: 172.16.242.2
+
+  rabbitmq:
+    image: rabbitmq:3-alpine
+    ports:
+      - "5676:5672" # RabbitMQ port
+      - "15676:15672" # RabbitMQ management UI port
+    volumes:
+      - ./rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      hams_notification_net:
+        ipv4_address: 172.16.242.7
+
+  hams_notification_rabbitmq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hams_notification_rabbitmq
+    command: bash -c 'dockerize -wait tcp://rabbitmq:5672 -timeout 180s && python consumer.py'
+    depends_on:
+      - hams_notification_celery
+      - rabbitmq
+    networks:
+      hams_notification_net:
+        ipv4_address: 172.16.242.6
+
+  hams_notification_celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hams_notification_celery
+    command: bash -c 'dockerize -wait tcp://rabbitmq:5672 -timeout 120s && celery -A hams_notification worker -l INFO'
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - hams_notification
+      - rabbitmq
+
+    networks:
+      hams_notification_net:
+        ipv4_address: 172.16.242.3
+
+networks:
+  hams_notification_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.242.0/24
