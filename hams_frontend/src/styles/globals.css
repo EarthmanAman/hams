@@ -25,3 +25,19 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+h4 {
+  @apply text-lg font-bold
+}
+
+h5 {
+  @apply text-lg font-bold
+}
+
+h6 {
+  @apply text-sm font-bold text-[#5C5C5C]
+}
+
+p {
+  @apply text-sm  text-[#5C5C5C]
+}
