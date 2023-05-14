@@ -1,5 +1,5 @@
 from __future__ import absolute_import, unicode_literals
-
+from django.core.mail import send_mail
 from celery import shared_task
 from twilio.rest import Client
 from dotenv import load_dotenv
@@ -60,3 +60,18 @@ def appointment_canceled_task(info):
         body=message
         )
     return message.sid
+
+
+@shared_task
+def doctor_appointment_notification_task(info):
+    message = f"\n Dear Dr {info['name']} \n\n An appointment from {info['patient']} on {info['date']} was registered.\n\n"
+   
+    message += "\nHave a nice day Doctor\nBest regards"
+    subject = "REGISTERED APPOINTMENT"
+    send_mail(
+        subject= subject,
+        from_email="hashimathman.info@gmail.com",
+        message=message,
+        recipient_list=[info["email"]],
+        fail_silently=False,
+    )

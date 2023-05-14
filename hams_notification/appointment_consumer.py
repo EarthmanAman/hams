@@ -7,7 +7,13 @@ import pika
 import json
 from django.conf import settings
 
-from appointment.tasks import appointment_canceled_task, appointment_completed_task, appointment_paid_task, appointment_register_task
+from appointment.tasks import (
+    appointment_canceled_task, 
+    appointment_completed_task, 
+    appointment_paid_task, 
+    appointment_register_task,
+    doctor_appointment_notification_task,
+)
 
 # Connection parameters
 url = settings.RABBITMQ_BROKER_URL
@@ -29,6 +35,7 @@ def callback(ch, method, properties, body):
     body = json.loads(body)
     if  content_type == "appointment_register":
         appointment_register_task.delay(body)
+        doctor_appointment_notification_task.delay(body)
     elif content_type == "appointment_paid":
         appointment_paid_task.delay(body)
     elif content_type == "appointment_completed":

@@ -6,7 +6,8 @@ django.setup()
 import pika
 import json
 from django.conf import settings
-from summary.tasks import doctor_summary_task, patient_quarterly_summary_task
+
+from user.tasks import user_doctor_task, user_patient_task, sms_verification_task, email_verification_task
 
 # Connection parameters
 url = settings.RABBITMQ_BROKER_URL
@@ -19,18 +20,17 @@ connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
 
 # Declare a queue
-queue_name = 'summary_notifications'
+queue_name = 'verification_notifications'
 channel.queue_declare(queue_name)
 
 # Define a callback function to handle incoming messages
 def callback(ch, method, properties, body):
     content_type = properties.content_type
     body = json.loads(body)
-    if  content_type == "doctor_appointment_daily_summary":
-        doctor_summary_task.delay(body)
-    elif content_type == "quarterly_patient_summary":
-        patient_quarterly_summary_task.delay(body)
-  
+    if  content_type == "sms_verification":
+        sms_verification_task.delay(body)
+    elif content_type == "email_verification":
+        email_verification_task.delay(body)
     
     ch.basic_ack(delivery_tag = method.delivery_tag)
 

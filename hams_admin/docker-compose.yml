@@ -4,7 +4,7 @@ services:
   hams_admin:
     build: .
     container_name: hams_admin
-    command: bash -c "dockerize -wait tcp://hams_admin_pgdb:5432 -timeout 30s && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "dockerize -wait tcp://hams_admin_pgdb:5432 -timeout 60s && python manage.py runserver 0.0.0.0:8000"
     environment:
       - RABBITMQ_BROKER_URL=amqps://knvwhrhu:i8F2dnkWj8XRUu0WRZ2gTcNa_XkvCrkD@turkey.rmq.cloudamqp.com/knvwhrhu
     volumes:
@@ -35,7 +35,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      
     networks:
       hams_admin_net:
         ipv4_address: 172.16.239.4

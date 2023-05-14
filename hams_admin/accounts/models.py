@@ -32,21 +32,22 @@ class CustomAccountManager(BaseUserManager):
 		return user
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email 			= models.EmailField(_("email address"), unique=True)
-    username 		= models.CharField(max_length=150, unique=True)
-    phone_no        = models.BigIntegerField(null=True, blank=True)
-    is_active 		= models.BooleanField(default=False)
-    email_verified 	= models.BooleanField(default=False)
-    phone_verified  = models.BooleanField(default=False)
-    is_staff 		= models.BooleanField(default=False)
-    dob 			= models.DateField()
-    gender 			= models.CharField(max_length=15, null=True)
-    avatar			= models.ImageField(upload_to="./avatars", blank=True, null=True)
+	email 			= models.EmailField(_("email address"), unique=True)
+	username 		= models.CharField(max_length=150, unique=True)
+	phone_no        = models.BigIntegerField(null=True, blank=True)
+	uuid 			= models.CharField(max_length=10, null=True)
+	is_active 		= models.BooleanField(default=False)
+	email_verified 	= models.BooleanField(default=False)
+	phone_verified  = models.BooleanField(default=False)
+	is_staff 		= models.BooleanField(default=False)
+	dob 			= models.DateField()
+	gender 			= models.CharField(max_length=15, null=True)
+	avatar			= models.ImageField(upload_to="./avatars", blank=True, null=True)
 
-    objects 	= CustomAccountManager()
+	objects 	= CustomAccountManager()
 
-    USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ["email", "dob"]
+	USERNAME_FIELD = "username"
+	REQUIRED_FIELDS = ["email", "dob"]
 
-    def __str__(self):
-        return self.username 
+	def __str__(self):
+		return self.username 
