@@ -6,6 +6,7 @@ url = settings.RABBITMQ_BROKER_URL
 params = pika.URLParameters(url)
 
 def verification(method, body):
+    print(body)
     # Create a connection to RabbitMQ
     connection = pika.BlockingConnection(params)
 

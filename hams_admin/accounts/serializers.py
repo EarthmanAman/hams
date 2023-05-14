@@ -69,6 +69,8 @@ class UserCreateSer(ModelSerializer):
         fields = [
             'username', 
             'email',
+            'first_name',
+            'last_name',
             'dob',
             'password',
             'confirm_password',
@@ -100,7 +102,9 @@ class UserCreateSer(ModelSerializer):
         avatar = validated_data.get("avatar", None)
         password = validated_data.get("password", None)
         phone_no = validated_data.get("phone_no", None)
-        user = User(username=username, email=email, dob=dob, avatar=avatar, phone_no=phone_no)
+        first_name = validated_data.get("first_name", " ")
+        last_name = validated_data.get("last_name", " ")
+        user = User(username=username, first_name=first_name, last_name=last_name, email=email, dob=dob, avatar=avatar, phone_no=phone_no)
         user.set_password(password)
         user.save()
         return validated_data

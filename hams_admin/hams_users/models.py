@@ -73,7 +73,7 @@ class Patient(DteCrModAbs):
     patient_type    = models.CharField(max_length=10, choices=PATIENT_TYPE)
     first_name      = models.CharField(max_length=50, null=True)
     last_name       = models.CharField(max_length=50, null=True)
-    dob             = models.DateField()
+    dob             = models.DateField(blank=True, null=True)
 
     def __str__(self) -> str:
-        return self.user.first_name + ' :- ' + self.patient_type
+        return str(self.user.first_name) + ' :- ' + self.patient_type

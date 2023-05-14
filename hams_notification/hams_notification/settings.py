@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # THIRD PARTIES
-    'celery'
+    'celery',
 
     # APPS
     'user',
@@ -138,7 +138,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # CUSTOM SETTINGS
-CELERY_BROKER_URL = 'amqp://guest:guest@172.16.242.7:5672//'
+CELERY_BROKER_URL = 'amqp://guest:guest@127.0.0.1:5672//'
 
 RABBITMQ_BROKER_URL = os.environ.get("RABBITMQ_BROKER_URL", "amqps://gqjkqjsq:oCbQRclI_iC0NEMDSNvqcLQd-GMvnx5G@turkey.rmq.cloudamqp.com/gqjkqjsq")
 

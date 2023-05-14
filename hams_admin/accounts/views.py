@@ -1,6 +1,7 @@
 from decimal import Decimal
 import uuid
 from django.shortcuts import render
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import (
 	CreateAPIView,
@@ -25,10 +26,13 @@ class UserCreateView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         data = request.data
         uuid_str = str(uuid.uuid4())[:7]
-        data["uuid"] = uuid_str
+        
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
-            user = serializer.save()
+            user = serializer.save(save=False)
+            user= User.objects.get(username=data["username"])
+            user.uuid = uuid_str
+            user.save()
             if data["doctor"] == True:
                 license_no = data.get("license_no", None)
                 fee = data.get("fee", None)
@@ -54,3 +58,8 @@ class UserCreateView(CreateAPIView):
 	      		"errors":errors,
 	     
 	        })
+
+class VerifyAccount(APIView):
+
+    def post(self, request, *args, **kwargs):
+        uuid = request.data
