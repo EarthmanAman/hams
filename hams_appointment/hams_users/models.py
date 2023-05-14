@@ -3,7 +3,7 @@ from abstract.models import DteCrModAbs
 
 class User(DteCrModAbs):
     user_id     = models.IntegerField(unique=True)
-    firat_name  = models.CharField(max_length=50)
+    first_name  = models.CharField(max_length=50)
     last_name   = models.CharField(max_length=50)
     username    = models.CharField(max_length=50, unique=True)
     email       = models.EmailField(unique=True)
@@ -53,9 +53,9 @@ class Patient(DteCrModAbs):
 
     user            = models.ForeignKey(User, on_delete=models.PROTECT)
     patient_type    = models.CharField(max_length=10, choices=PATIENT_TYPE)
-    first_name      = models.CharField(max_length=50, null=True)
-    last_name       = models.CharField(max_length=50, null=True)
-    dob             = models.DateField()
+    first_name      = models.CharField(max_length=50, null=True, blank=True)
+    last_name       = models.CharField(max_length=50, null=True, blank=True)
+    dob             = models.DateField(null=True, blank=True)
 
     def __str__(self) -> str:
         return self.user.first_name + ' :- ' + self.patient_type
