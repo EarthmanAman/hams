@@ -1,7 +1,10 @@
+import React, { useState } from "react";
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import Layout from '@/components/layout'
 import Link from 'next/link'
+import 'react-modern-calendar-datepicker/lib/DatePicker.css';
+import { Calendar } from "react-modern-calendar-datepicker";
 
 import {MdCalendarMonth, MdTipsAndUpdates, MdPersonPin, MdDirectionsWalk, MdPhoneEnabled} from "react-icons/md"
 import {CiCalendarDate} from "react-icons/ci"
@@ -9,6 +12,8 @@ import {CiCalendarDate} from "react-icons/ci"
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const [selectedDay, setSelectedDay] = useState(null);
+
   return (
     <Layout>
       <div className='my-3 flex space-x-2'>
@@ -146,6 +151,13 @@ export default function Home() {
             </div>
             
           </div>
+
+          {/* CALENDER  */}
+          <Calendar
+            value={selectedDay}
+            onChange={setSelectedDay}
+            shouldHighlightWeekends
+          />
         </div>
         
       </div>
