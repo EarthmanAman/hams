@@ -8,6 +8,7 @@ import { Calendar } from "react-modern-calendar-datepicker";
 
 import {MdCalendarMonth, MdTipsAndUpdates, MdPersonPin, MdDirectionsWalk, MdPhoneEnabled} from "react-icons/md"
 import {CiCalendarDate} from "react-icons/ci"
+import ApexChart from "@/components/chart";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -138,6 +139,46 @@ export default function Home() {
 
 
           </div>
+
+
+        </div>
+
+        <div className='bg-[#ffffff] m-h-[300px] flex-1 rounded-md'>
+          {/* TITLE */}
+          <div className='p-5'>
+            <div>
+              <h4>APPOINTMENTS</h4>
+              {/* <p>Your next appointment today</p> */}
+            </div>
+            
+          </div>
+
+          {/* CALENDER  */}
+          <Calendar
+            value={selectedDay}
+            onChange={setSelectedDay}
+            shouldHighlightWeekends
+          />
+        </div>
+        
+      </div>
+
+      <div className='my-3 flex space-x-2'>
+        <div className='bg-[#ffffff] m-h-[300px] flex-[2] rounded-md p-5'>
+          {/* TITLE */}
+          <div className='flex justify-between items-center'>
+            <div>
+              <h4>NEXT APPOINTMENTS</h4>
+              <p>Your next appointment today</p>
+            </div>
+
+            <Link href="">
+              <p className='text-blue-600'>See all</p>
+            </Link>
+            
+          </div>
+
+          <ApexChart />
 
 
         </div>
