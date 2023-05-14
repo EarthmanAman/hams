@@ -140,8 +140,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CUSTOM SETTINGS
 CELERY_BROKER_URL = 'amqp://guest:guest@127.0.0.1:5672//'
 
-RABBITMQ_BROKER_URL = os.environ.get("RABBITMQ_BROKER_URL", "amqps://gqjkqjsq:oCbQRclI_iC0NEMDSNvqcLQd-GMvnx5G@turkey.rmq.cloudamqp.com/gqjkqjsq")
-
+# RABBITMQ_BROKER_URL = os.environ.get("RABBITMQ_BROKER_URL", "amqps://gqjkqjsq:oCbQRclI_iC0NEMDSNvqcLQd-GMvnx5G@turkey.rmq.cloudamqp.com/gqjkqjsq")
+RABBITMQ_BROKER_URL = "amqps://knvwhrhu:i8F2dnkWj8XRUu0WRZ2gTcNa_XkvCrkD@turkey.rmq.cloudamqp.com/knvwhrhu"
 
 # EMAIL SETTINGS
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  

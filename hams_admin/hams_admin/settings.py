@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # Third Parties
     'celery',
     'rest_framework',
+    'rest_framework_simplejwt',
 
     #APPS
     'accounts',
@@ -87,18 +88,24 @@ WSGI_APPLICATION = 'hams_admin.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": env("POSTGRES_DB"),
+#         "USER": env("POSTGRES_USER"),
+#         "PASSWORD": env("POSTGRES_PASSWORD"),
+#         "HOST": "",
+#         'PORT':5432,
+#         'CONN_MAX_AGE': 30,
+#     }
+# }
+
 DATABASES = {
     'default': {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": env("POSTGRES_DB"),
-        "USER": env("POSTGRES_USER"),
-        "PASSWORD": env("POSTGRES_PASSWORD"),
-        "HOST": "",
-        'PORT':5432,
-        'CONN_MAX_AGE': 30,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -147,4 +154,16 @@ AUTH_USER_MODEL = "accounts.User"
 
 CELERY_BROKER_URL = 'amqp://guest:guest@127.0.0.1:5672//'
 
-RABBITMQ_BROKER_URL = os.environ.get("RABBITMQ_BROKER_URL", "amqps://knvwhrhu:i8F2dnkWj8XRUu0WRZ2gTcNa_XkvCrkD@turkey.rmq.cloudamqp.com/knvwhrhu")
+# RABBITMQ_BROKER_URL = os.environ.get("RABBITMQ_BROKER_URL", "amqps://knvwhrhu:i8F2dnkWj8XRUu0WRZ2gTcNa_XkvCrkD@turkey.rmq.cloudamqp.com/knvwhrhu")
+
+RABBITMQ_BROKER_URL = "amqps://knvwhrhu:i8F2dnkWj8XRUu0WRZ2gTcNa_XkvCrkD@turkey.rmq.cloudamqp.com/knvwhrhu"
+
+REST_FRAMEWORK = {
+    
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}

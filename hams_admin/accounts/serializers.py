@@ -15,6 +15,7 @@ from rest_framework.serializers import (
 	)
 from drf_extra_fields.fields import Base64ImageField
 
+from hams_users.serializers import DoctorFromUserSer, PatientSer
 from . models import User
 
 class ChangePasswordSerializer(Serializer):
@@ -108,3 +109,30 @@ class UserCreateSer(ModelSerializer):
         user.set_password(password)
         user.save()
         return validated_data
+
+
+class UserDetSer(ModelSerializer):
+    doctor = SerializerMethodField()
+    patients = SerializerMethodField()
+    class Meta:
+        model =  User
+        fields = [
+            'username', 
+            'email',
+            'first_name',
+            'last_name',
+            'dob',
+            "avatar",
+            "phone_no",
+            "doctor",
+            "patients"
+        ]
+    
+    def get_doctor(self, obj):
+        try:
+            return DoctorFromUserSer(obj.doctor).data
+        except:
+            return None
+    
+    def get_patients(self, obj):
+        return PatientSer(obj.patient_set.all(), many=True).data

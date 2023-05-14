@@ -15,7 +15,7 @@ from rest_framework.status import (
 	)
 from hams_users.models import Doctor, Patient
 from .models import User
-from .serializers import UserCreateSer
+from .serializers import UserCreateSer, UserDetSer
 
 from .tasks import sms_verification, email_verification
 
@@ -33,7 +33,9 @@ class UserCreateView(CreateAPIView):
             user= User.objects.get(username=data["username"])
             user.uuid = uuid_str
             user.save()
-            if data["doctor"] == True:
+
+            print(data["doctor"])
+            if data["doctor"] == "true":
                 license_no = data.get("license_no", None)
                 fee = data.get("fee", None)
                 user1 = Doctor.objects.create(user=user, license_no=license_no, fee=Decimal(fee))
@@ -59,6 +61,11 @@ class UserCreateView(CreateAPIView):
 	     
 	        })
 
+
+class UserUpdateView(RetrieveUpdateDestroyAPIView):
+    serializer_class = UserDetSer
+    queryset = User.objects.all()
+    
 class VerifyAccount(APIView):
 
     def post(self, request, *args, **kwargs):
