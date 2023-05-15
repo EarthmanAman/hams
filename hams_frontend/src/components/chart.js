@@ -1,5 +1,8 @@
 import React from "react";
-import ReactApexChart from "react-apexcharts"
+// import ReactApexChart from "react-apexcharts"
+import dynamic from 'next/dynamic'
+
+const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 class ApexChart extends React.Component {
     constructor(props) {
@@ -95,13 +98,11 @@ class ApexChart extends React.Component {
 
     render() {
       return (
-        
-
-  <div id="chart">
-<ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={350} />
-</div>
-
-
+      <div id="chart">
+        {(typeof window !== 'undefined') &&
+        <ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={350} />
+        }
+      </div>
       );
     }
   }

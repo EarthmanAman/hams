@@ -30,14 +30,14 @@ export default class  Layout extends React.Component {
                     
                     {/* NAVIGATION */}
                     <div className='mt-7 flex flex-col space-y-3'>
-                        <Link href="">
+                        <Link href="/">
                             <div className='bg-[#eafff8] px-4 py-3 rounded-md flex space-x-2 items-center'>
                                 <MdDashboard color='green'/>
                                 <h6>Dashboard</h6>
                             </div>
                         </Link>
 
-                        <Link href="">
+                        <Link href="/appointments">
                             <div className='px-4 py-3 rounded-md flex space-x-2 items-center'>
                                 <MdCalendarMonth color='#5C5C5C' />
                                 <h6>Appointment</h6>

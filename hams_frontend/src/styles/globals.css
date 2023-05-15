@@ -27,11 +27,11 @@ body {
 }
 
 h4 {
-  @apply text-lg font-bold
+  @apply text-lg font-bold text-black
 }
 
 h5 {
-  @apply text-lg font-bold
+  @apply text-lg font-bold text-black
 }
 
 h6 {
@@ -43,5 +43,5 @@ p {
 }
 
 button {
-  @apply px-4 py-2 border-[#47bb92] border-[1px] rounded-md
+  @apply px-2 py-1 border-[#47bb92] border-[1px] rounded-md
 }
