@@ -40,8 +40,8 @@ class Prescription(DteCrModAbs):
     def __str__(self) -> str:
         return self.name
 
-class DiagnosisTest(DteCrModAbs):
-    diagnosis   = models.ForeignKey(Diagnosis, on_delete=models.CASCADE)
+class AppointmentTest(DteCrModAbs):
+    diagnosis   = models.ForeignKey(Appointment, on_delete=models.CASCADE)
     test        = models.ForeignKey(Test, on_delete=models.PROTECT)
 
     def __str__(self) -> str:

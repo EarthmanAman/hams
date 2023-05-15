@@ -14,7 +14,7 @@ from rest_framework.serializers import (
 	ValidationError,	
 	)
 from drf_extra_fields.fields import Base64ImageField
-
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from hams_users.serializers import DoctorFromUserSer, PatientSer
 from . models import User
 
@@ -117,6 +117,7 @@ class UserDetSer(ModelSerializer):
     class Meta:
         model =  User
         fields = [
+            'id',
             'username', 
             'email',
             'first_name',
@@ -136,3 +137,16 @@ class UserDetSer(ModelSerializer):
     
     def get_patients(self, obj):
         return PatientSer(obj.patient_set.all(), many=True).data
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['name'] = user.username
+        # ...
+
+        return token
+    

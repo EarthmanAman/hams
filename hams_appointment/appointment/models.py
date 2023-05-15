@@ -20,6 +20,7 @@ class Appointment(DteCrModAbs):
     date            = models.DateTimeField()
     afp             = models.BooleanField(default=False)
     service_fee     = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    completed       = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return self.patient.__str__() + ' :- ' + self.doctor.__str__() + ' :- ' + str(self.date)

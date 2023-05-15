@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     #THIRD PARTIES
     'celery',
     'rest_framework',
+    "corsheaders",
 
     # APPS
     'abstract',
@@ -62,6 +63,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # THIRD PARTIES
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'hams_appointment.urls'
@@ -155,4 +159,11 @@ CELERY_BROKER_URL = 'amqp://guest:guest@127.0.0.1:5672//'
 
 # RABBITMQ_BROKER_URL = os.environ.get("RABBITMQ_BROKER_URL", "amqps://knvwhrhu:i8F2dnkWj8XRUu0WRZ2gTcNa_XkvCrkD@turkey.rmq.cloudamqp.com/knvwhrhu")
 RABBITMQ_BROKER_URL = "amqps://knvwhrhu:i8F2dnkWj8XRUu0WRZ2gTcNa_XkvCrkD@turkey.rmq.cloudamqp.com/knvwhrhu"
+
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
 

@@ -8,6 +8,10 @@ from rest_framework.generics import (
 	ListAPIView,
 	RetrieveUpdateDestroyAPIView,
 )
+
+
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
 from rest_framework.status import (
 	HTTP_400_BAD_REQUEST,
 	HTTP_201_CREATED,
@@ -15,9 +19,28 @@ from rest_framework.status import (
 	)
 from hams_users.models import Doctor, Patient
 from .models import User
-from .serializers import UserCreateSer, UserDetSer
+from .serializers import UserCreateSer, UserDetSer, MyTokenObtainPairSerializer
 
-from .tasks import sms_verification, email_verification
+from .tasks import sms_verification, email_verification, user_to_appointment_task
+
+
+
+class CustomAuthToken(ObtainAuthToken):
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                        context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        info = UserDetSer(user).data
+        token= Token.objects.get(user=user).key
+
+        return Response({
+            "status": "success",
+            "status_code": 201,
+            "token": token,
+            'user': info,
+        })
 
 class UserCreateView(CreateAPIView):
     serializer_class = UserCreateSer
@@ -69,4 +92,18 @@ class UserUpdateView(RetrieveUpdateDestroyAPIView):
 class VerifyAccount(APIView):
 
     def post(self, request, *args, **kwargs):
-        uuid = request.data
+        uuid = request.data.get("uuid", None)
+
+        if uuid != None:
+            user = User.objects.filter(uuid=uuid)
+            if user.exists():
+                user = user.last()
+                user.is_active = True
+                user.email_verified = True
+                user.save()
+
+                info = UserDetSer(user).data
+                user_to_appointment_task.delay(info)
+                return Response({"status": 200, "message":"Verified successfully"})
+            else:
+                return Response({"status": 400, "message":"The code you entered is invalid"})

@@ -1,20 +1,48 @@
 import React from 'react';
+import { withRouter } from 'next/router';
 import Image from 'next/image'
 import {MdDashboard, MdCalendarMonth, MdPeopleAlt} from "react-icons/md"
-
+import { connect } from "react-redux";
 import Link from 'next/link';
+import SpinnerComponent from '@/utils/spinner';
 
+import { appointmentsAPI } from '@/redux/splices/appointmentsSplice';
+import { testsAPI } from '@/redux/splices/testSplice';
 import Logo from "../../public/logo.png"
 import Avatar from "../../public/avatar.png"
 
 
 const imageLoader = require("../loader");
-export default class  Layout extends React.Component {
+class  Layout extends React.Component {
 
+    componentDidMount = async() => {
+        try{
+            await this.props.appointmentsAPI(this.props.user.user.id)
+            await this.props.testsAPI()
+        }catch(e){
+            if(this.props.user_appointments.user_appointments == null){
+                this.props.router.push("/login")
+            }
+            
+        }
+        
+    }
     render() {
+        console.log(this.props.user)
+        // if(this.props.user.token == null){
+        //     this.props.router.push("/login")
+        // }
         return (
             <main className="mx-3">
             <div className='bg-[#f7f7f7] min-h-[700px] flex space-x-3'>
+
+                {this.props.user_appointments.isLoading == true ? 
+                    <div className='absolute top-0 left-0 flex justify-center items-center h-[400px] w-[550px] bg-black bg-opacity-10 backdrop-blur-sm'>
+                        <SpinnerComponent visible={true} />
+                    </div>
+                : null}
+
+
                 <div className='flex-1 bg-[#ffffff] py-4 px-5 my-1'>
 
                     {/* Logo */}
@@ -73,3 +101,12 @@ export default class  Layout extends React.Component {
         )
     }
 }
+
+const mapStateToProps = (state) => ({
+    user_appointments: state.user_appointments,
+    user: state.user.user
+  });
+  
+  const mapDispatchToProps = { appointmentsAPI, testsAPI};
+  
+  export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Layout));

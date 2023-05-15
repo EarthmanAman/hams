@@ -3,7 +3,8 @@ from rest_framework.serializers import (
 	SerializerMethodField,
 )
 
-from .models import Diagnosis, Prescription, DiagnosedDisease, DiagnosisTest, Disease, Test
+
+from .models import Diagnosis, Prescription, DiagnosedDisease, AppointmentTest, Disease, Test
 
 
 class DiseaseSer(ModelSerializer):
@@ -18,18 +19,18 @@ class TestSer(ModelSerializer):
         model = Test
         fields = "__all__"
 
-# DiagnosisTest
+# AppointmentTest
 
-class DiagnosisTestSer(ModelSerializer):
+class AppointmentTestSer(ModelSerializer):
 
     class Meta:
-        model = DiagnosisTest
+        model = AppointmentTest
         fields = "__all__"
 
-class DiagnosisTestDetSer(ModelSerializer):
+class AppointmentTestDetSer(ModelSerializer):
     test = SerializerMethodField()
     class Meta:
-        model = DiagnosisTest
+        model = AppointmentTest
         fields = [
             "id",
             "test"
@@ -47,19 +48,19 @@ class DiagnosisCreateSer(ModelSerializer):
 
 
 class DiagnosisDetSer(ModelSerializer):
-    tests = SerializerMethodField()
+    # tests = SerializerMethodField()
     diseases = SerializerMethodField()
     class Meta:
         model = Diagnosis
         fields = [
             "id",
             "description",
-            "tests",
+            # "tests",
             "diseases",
         ]
     
-    def get_tests(self, obj):
-        return DiagnosisTestDetSer(obj.diagnosistest_set.all(), many=True).data
+    # def get_tests(self, obj):
+    #     return AppointmentTestDetSer(obj.AppointmentTest_set.all(), many=True).data
 
     def get_diseases(self,obj):
         return DiagnosisDiseaseDetSer(obj.diagnoseddisease_set.all(), many=True).data

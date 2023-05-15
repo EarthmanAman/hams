@@ -6,7 +6,7 @@ from . models import (
     Diagnosis,
     DiagnosedDisease,
     Prescription,
-    DiagnosisTest,
+    AppointmentTest,
 )
 
 admin.site.register(Disease)
@@ -14,4 +14,4 @@ admin.site.register(Test)
 admin.site.register(Diagnosis)
 admin.site.register(DiagnosedDisease)
 admin.site.register(Prescription)
-admin.site.register(DiagnosisTest)
+admin.site.register(AppointmentTest)

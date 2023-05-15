@@ -28,3 +28,28 @@ def verification(method, body):
 
     # Close the connection
     connection.close()
+
+
+def user_to_appointment(method, body):
+    print(body)
+    # Create a connection to RabbitMQ
+    connection = pika.BlockingConnection(params)
+
+    # Properties
+    properties = pika.BasicProperties(method)
+    # Create a channel
+    channel = connection.channel()
+
+    # Declare a queue
+    channel.queue_declare(queue='user_to_appointment')
+    body = json.dumps(body)
+    # Publish the message to the queue
+    channel.basic_publish(
+        exchange='',
+        routing_key='user_to_appointment',
+        body=body,
+        properties=properties
+    )
+
+    # Close the connection
+    connection.close()

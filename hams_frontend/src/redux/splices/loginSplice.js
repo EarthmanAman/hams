@@ -2,15 +2,13 @@ import {createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { api_stub_post } from '../../api/_stub'
 
 const initialState = {
-  refresh: null,
-  access: null,
+  user: {token:null},
 }
 
 export const loginAPI = createAsyncThunk(
   'login/token',
   async (context) => {
-    const res = await api_stub_post("/api/token/", context)
-    console.log(res)
+    const res = await api_stub_post("/accounts/login/", context)
     return res
   }
 )
@@ -26,7 +24,7 @@ const loginSplice = createSlice({
     })
     builder.addCase(loginAPI.fulfilled, (state, action) => {
       state.isLoading = false
-      state.status = action.payload
+      state.user = action.payload
     })
     builder.addCase(loginAPI.rejected, (state, action) => {
       state.isLoading = false

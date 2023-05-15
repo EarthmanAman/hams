@@ -1,17 +1,21 @@
 from django.shortcuts import render
 from rest_framework.generics import (
-    CreateAPIView, RetrieveUpdateDestroyAPIView
+    CreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 )
 from .models import (
     Diagnosis, DiagnosedDisease,
-    DiagnosisTest, Prescription
+    AppointmentTest, Prescription, Test
 )
 
 from .serializers import (
-    DiagnosisCreateSer, DiagnosisTestSer, DiagnosisDiseaseSer, PrescriptionSer,
-    DiagnosisDetSer, DiagnosisTestDetSer, DiagnosisDiseaseDetSer,
+    DiagnosisCreateSer, AppointmentTestSer, DiagnosisDiseaseSer, PrescriptionSer,
+    DiagnosisDetSer, AppointmentTestDetSer, DiagnosisDiseaseDetSer, TestSer
 )
 
+
+class TestList(ListAPIView):
+    serializer_class = TestSer
+    queryset = Test.objects.all()
 # DIAGNOSIS
 class DiagnosisCreateView(CreateAPIView):
     serializer_class = DiagnosisCreateSer
@@ -22,13 +26,13 @@ class DiagnosisDetView(RetrieveUpdateDestroyAPIView):
     queryset = Diagnosis.objects.all()
 
 # DIAGNOSIS TEST
-class DiagnosisTestCreateView(CreateAPIView):
-    serializer_class = DiagnosisTestSer
-    queryset = DiagnosisTest.objects.all()
+class AppointmentTestCreateView(CreateAPIView):
+    serializer_class = AppointmentTestSer
+    queryset = AppointmentTest.objects.all()
 
-class DiagnosisTestDetView(RetrieveUpdateDestroyAPIView):
-    serializer_class = DiagnosisTestDetSer
-    queryset = DiagnosisTest.objects.all()
+class AppointmentTestDetView(RetrieveUpdateDestroyAPIView):
+    serializer_class = AppointmentTestDetSer
+    queryset = AppointmentTest.objects.all()
 
 # DIAGNOSIS DISEASE
 class DiagnosisDiseaseCreateView(CreateAPIView):

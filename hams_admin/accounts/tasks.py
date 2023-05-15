@@ -13,3 +13,8 @@ def sms_verification(info):
 def email_verification(info):
     
     return verification("email_verification", info)
+
+@shared_task
+def user_to_appointment_task(info):
+    
+    return verification("user_to_appointment", info)
