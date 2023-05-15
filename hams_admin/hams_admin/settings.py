@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'celery',
     'rest_framework',
     'rest_framework_simplejwt',
+    
+    "corsheaders",
 
     #APPS
     'accounts',
@@ -62,6 +64,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # THIRD PARTIES
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'hams_admin.urls'
@@ -167,3 +172,9 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
