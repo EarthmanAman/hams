@@ -32,7 +32,7 @@ class Doctor(DteCrModAbs):
     fee         = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self) -> str:
-        return self.user.first_name + ' :- ' + self.license_no
+        return str(self.user.first_name) + ' :- ' + self.license_no
 
 
 class DoctorSpeciality(DteCrModAbs):

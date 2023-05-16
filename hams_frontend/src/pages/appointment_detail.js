@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import {MdCalendarMonth, MdRemoveRedEye, MdEditSquare, MdDelete, MdPersonPin, MdDirectionsWalk, MdPhoneEnabled} from "react-icons/md"
 import 'react-tabs/style/react-tabs.css';
+import Popup from 'reactjs-popup';
 import { connect } from 'react-redux';
 import Avatar from "../../public/avatar.png"
 import Image from 'next/image';
@@ -51,8 +52,24 @@ class  AppointmentDetail extends React.Component {
         
                         {/* RIGHT  */}
                         <div className='flex space-x-3'>
-                            <button className='bg-red-500'>CANCEL</button>
-                            <button className='bg-[#47bb92]'>RESCHEDULE</button>
+                            <Popup 
+                                contentStyle={{background:"grey", height:300, width: 300, marginTop:100, borderRadius:10}}
+                                trigger={<button className='bg-red-500'>CANCEL</button>}
+                                position="left"
+                            >
+                                <div>
+                                    <h4>Cancel</h4>
+                                </div>
+                            </Popup>
+                            
+                            <Popup 
+                                contentStyle={{background:"grey", height:300, width: 300, marginTop:100, borderRadius:10}}
+                                trigger={<button className='bg-[#47bb92]'>RESCHEDULE</button>}
+                                position="left"
+                            >
+                                <h4>Reschedule</h4>
+                            </Popup>
+                            
                         </div>
                     </div>
         
@@ -330,7 +347,14 @@ class  AppointmentDetail extends React.Component {
                                     <form>
                                         
                                     </form>
-                                    <button className='bg-[#47bb92] ml-3'>ADD TEST</button>
+                                    <Popup 
+                                        contentStyle={{background:"grey", height:300, width: 300, marginTop:100, borderRadius:10}}
+                                        trigger={<button className='bg-[#47bb92] ml-3'>ADD DIAGNOSIS</button>}
+                                        position="left"
+                                    >
+
+                                    </Popup>
+                                    
                                 </div>
         
                                 {/* LIST  */}
@@ -411,7 +435,15 @@ class  AppointmentDetail extends React.Component {
                                     <form>
                                         
                                     </form>
-                                    <button className='bg-[#47bb92] ml-3'>ADD PRESCRIPTION</button>
+
+                                    <Popup 
+                                        contentStyle={{background:"grey", height:300, width: 300, marginTop:100, borderRadius:10}}
+                                        trigger={ <button className='bg-[#47bb92] ml-3'>ADD PRESCRIPTION</button>}
+                                        position="left"
+                                    >
+
+                                    </Popup>
+                                   
                                 </div>
         
                                 {/* LIST  */}
