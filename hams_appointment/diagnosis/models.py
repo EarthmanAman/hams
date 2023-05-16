@@ -18,6 +18,7 @@ class Test(DteCrModAbs):
 class Diagnosis(DteCrModAbs):
 
     appointment     = models.ForeignKey(Appointment, on_delete=models.CASCADE)
+    disease         = models.CharField(max_length=100, null=True)
     description     = models.TextField(blank=True, null=True)
 
     def __str__(self) -> str:
@@ -32,8 +33,8 @@ class DiagnosedDisease(DteCrModAbs):
 
 
 class Prescription(DteCrModAbs):
-    diagnosed_disease   = models.ForeignKey(DiagnosedDisease, on_delete=models.CASCADE)
-    
+    diagnosed_disease   = models.ForeignKey(DiagnosedDisease, on_delete=models.CASCADE, null=True, blank=True)
+    appointment         = models.ForeignKey(Diagnosis, on_delete=models.CASCADE, null=True, blank=True)
     name                = models.CharField(max_length=100)
     description         = models.TextField(blank=True, null=True)
 

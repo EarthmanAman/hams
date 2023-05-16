@@ -21,4 +21,5 @@ urlpatterns = [
     path('users/', include("hams_users.urls", namespace="hams_users")),
     path('appointment/', include("appointment.urls", namespace="appointment")),
     path('diagnosis/', include("diagnosis.urls", namespace="diagnosis")),
+    path('ussd/', include("ussd.urls", namespace="ussd")),
 ]

@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-3yk#0^(iw9y^uj%)%z=%n-_^53h1z2o!kttlnr397g1trjt-_h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'appointment',
     'diagnosis',
     'hams_users',
+    "ussd",
 ]
 
 MIDDLEWARE = [
@@ -92,24 +93,24 @@ WSGI_APPLICATION = 'hams_appointment.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         "ENGINE": "django.db.backends.postgresql_psycopg2",
-#         "NAME": env("POSTGRES_DB"),
-#         "USER": env("POSTGRES_USER"),
-#         "PASSWORD": env("POSTGRES_PASSWORD"),
-#         "HOST": "hams_appointment_pgdb",
-#         'PORT':5432,
-#         'CONN_MAX_AGE': 30,
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'db.sqlite3',
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": env("POSTGRES_DB"),
+        "USER": env("POSTGRES_USER"),
+        "PASSWORD": env("POSTGRES_PASSWORD"),
+        "HOST": "hams_appointment_pgdb",
+        'PORT':5432,
+        'CONN_MAX_AGE': 30,
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
@@ -155,7 +156,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom settings
 
-CELERY_BROKER_URL = 'amqp://guest:guest@127.0.0.1:5672//'
+CELERY_BROKER_URL = 'amqp://guest:guest@172.16.240.8:5672//'
 
 # RABBITMQ_BROKER_URL = os.environ.get("RABBITMQ_BROKER_URL", "amqps://knvwhrhu:i8F2dnkWj8XRUu0WRZ2gTcNa_XkvCrkD@turkey.rmq.cloudamqp.com/knvwhrhu")
 RABBITMQ_BROKER_URL = "amqps://knvwhrhu:i8F2dnkWj8XRUu0WRZ2gTcNa_XkvCrkD@turkey.rmq.cloudamqp.com/knvwhrhu"

@@ -31,10 +31,16 @@ class  Login extends React.Component {
     }
 
     render() {
-        
+        let error = undefined
+        try {
+            error = this.props.user.user.non_field_errors
+        }catch(e){
+            
+        }
         if(this.props.user.user.token != null){
             this.props.router.push("/")
         }
+        
         return (
             <div className=" min-h-[600px] w-full flex justify-center items-center bg-[#f7f7f7] ">
                 
@@ -48,9 +54,18 @@ class  Login extends React.Component {
                                 <SpinnerComponent visible={true} />
                             </div>
                         : null}
-                        <input placeholder='username' className='text-black' onChange={(text) => this.setState({username: text.target.value})}/>
-                        <input placeholder='password' className='text-black' onChange={(text) => this.setState({password: text.target.value})}/>
-                        <button className='bg-green text-black'  onClick={this.handleLogin}>Login</button>
+
+                        <h4 className='mb-5 text-2xl'>LOGIN TO HOSPITAL APPOINTMNET MANAGEMENT SYSTEM</h4>
+
+                        {error != undefined ? <p className='text-red-600'>Unable to login with provided credentials</p>:null}
+                        <input placeholder='username' className='text-black border-2 rounded-md p-4' onChange={(text) => this.setState({username: text.target.value})}/>
+                        <input placeholder='password' className='text-black border-2 rounded-md p-4' onChange={(text) => this.setState({password: text.target.value})}/>
+                        <button className='bg-green-700 text-black p-4'  onClick={this.handleLogin}>Login</button>
+
+                        <div className='flex space-x-2 mt-3 items-center'>
+                            <p>Don't have an account?</p>
+                            <Link href={"/"} className='text-blue-600'>Register</Link>
+                        </div>
                     </div>
                 </div>
             </div>

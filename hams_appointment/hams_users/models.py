@@ -51,11 +51,13 @@ class Patient(DteCrModAbs):
         ('child', 'CHILD'),
     )
 
-    user            = models.ForeignKey(User, on_delete=models.PROTECT)
-    patient_type    = models.CharField(max_length=10, choices=PATIENT_TYPE)
+    user            = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
+    patient_type    = models.CharField(max_length=10, choices=PATIENT_TYPE, default="false")
     first_name      = models.CharField(max_length=50, null=True, blank=True)
     last_name       = models.CharField(max_length=50, null=True, blank=True)
+    phone_no        = models.BigIntegerField(blank=True, null=True)
+    email           = models.EmailField(default="example@gmail.com")
     dob             = models.DateField(null=True, blank=True)
 
     def __str__(self) -> str:
-        return self.user.first_name + ' :- ' + self.patient_type
+        return  ' :- ' + self.patient_type

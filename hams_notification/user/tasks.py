@@ -7,8 +7,8 @@ import os
 
 load_dotenv()
 # Your Account SID and Auth Token from console.twilio.com
-account_sid = os.environ.get("TWILIO_ACCOUNT_SID")
-auth_token = os.environ.get("TWILIO_AUTH_TOKEN")
+account_sid = "ACbca27343716894de4a14fb24505a7fb6"
+auth_token = "fe7b3d794c2c7c4a9257db1ba83cb9fb"
 
 
 @shared_task
@@ -58,5 +58,20 @@ def email_verification_task(info):
         from_email="hashimathman.info@gmail.com",
         message=message,
         recipient_list=[info["email"]],
+        fail_silently=False,
+    )
+
+@shared_task
+def appoinment_create_task(info):
+    doctor = info["doctor"]
+    patient = info["patient"]
+    message = f"\n Dear Dr {doctor['name']} \n\n A Patient by the name {patient['name']}, phone number {patient['phone_no']} has booked an appointment with you on {info['date']}\n\n Thank you."
+    
+    subject = f"{patient['name']} APPOINTMENT"
+    send_mail(
+        subject= subject,
+        from_email="hashimathman.info@gmail.com",
+        message=message,
+        recipient_list=[doctor["email"]],
         fail_silently=False,
     )

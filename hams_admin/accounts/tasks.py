@@ -1,7 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 
-from .producer import verification
+from .producer import verification, user_to_appointment
 
 
 @shared_task
@@ -15,6 +15,6 @@ def email_verification(info):
     return verification("email_verification", info)
 
 @shared_task
-def user_to_appointment_task(info):
+def user_to_appointment_task(method, info):
     
-    return verification("user_to_appointment", info)
+    return user_to_appointment(method, info)

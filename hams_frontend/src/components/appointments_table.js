@@ -135,11 +135,11 @@ class AppointmentsTable extends React.Component {
                                                         </Link>
                                                     </button>
         
-                                                    <button className="border-0 p-0">
+                                                    {/* <button className="border-0 p-0">
                                                         <MdEditSquare size={20} color="blue"/>
-                                                    </button>
+                                                    </button> */}
 
-                                                    <Popup 
+                                                    {/* <Popup 
                                                         contentStyle={{background:"grey", height:300, width: 300, marginTop:100, borderRadius:10}}
                                                         trigger={<button className="border-0 p-0"><MdDelete size={20} color="red"/></button>}
                                                         position="left"
@@ -147,7 +147,7 @@ class AppointmentsTable extends React.Component {
                                                         <div>
                                                             <h4>Delete</h4>
                                                         </div>
-                                                    </Popup>
+                                                    </Popup> */}
                                                     
                                                         
                                                         

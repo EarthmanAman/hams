@@ -27,6 +27,7 @@ channel.queue_declare(queue_name)
 def callback(ch, method, properties, body):
     content_type = properties.content_type
     body = json.loads(body)
+    print(body)
     if  content_type == "doctor_create":
         user_doctor_task.delay(body)
     elif content_type == "patient_create":

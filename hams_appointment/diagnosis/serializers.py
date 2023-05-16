@@ -50,11 +50,16 @@ class DiagnosisCreateSer(ModelSerializer):
 class DiagnosisDetSer(ModelSerializer):
     # tests = SerializerMethodField()
     diseases = SerializerMethodField()
+    date = SerializerMethodField()
+    time = SerializerMethodField()
     class Meta:
         model = Diagnosis
         fields = [
             "id",
             "description",
+            "date",
+            "time",
+            "disease",
             # "tests",
             "diseases",
         ]
@@ -65,6 +70,11 @@ class DiagnosisDetSer(ModelSerializer):
     def get_diseases(self,obj):
         return DiagnosisDiseaseDetSer(obj.diagnoseddisease_set.all(), many=True).data
 
+    def get_date(self,obj):
+        return obj.dte_created.date()
+
+    def get_time(self,obj):
+        return obj.dte_created.time()
 
 # DIAGNOSIS DISEASE
 class DiagnosisDiseaseSer(ModelSerializer):
@@ -93,7 +103,20 @@ class DiagnosisDiseaseDetSer(ModelSerializer):
 #PRESCRIPTION
 
 class PrescriptionSer(ModelSerializer):
-
     class Meta:
         model = Prescription
         fields = "__all__"
+
+class PrescriptionDetSer(ModelSerializer):
+    diagnosis = SerializerMethodField()
+    class Meta:
+        model = Prescription
+        fields = [
+            "id",
+            "name",
+            "description",
+            "diagnosis",
+        ]
+    
+    def get_diagnosis(self, obj):
+        return DiagnosisCreateSer(obj.appointment).data

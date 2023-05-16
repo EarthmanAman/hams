@@ -24,3 +24,26 @@ class Appointment(DteCrModAbs):
 
     def __str__(self) -> str:
         return self.patient.__str__() + ' :- ' + self.doctor.__str__() + ' :- ' + str(self.date)
+    
+    def save(self, *args, **kwargs):
+
+        from . tasks import appointment_create_task
+
+        super().save(*args, **kwargs)
+        doctor = self.doctor
+        patient = self.patient
+        
+        info = {
+            "doctor": {
+                "name": doctor.user.first_name,
+                "email": doctor.user.email,
+            },
+            "patient": {
+                "name": patient.user.first_name + " " + patient.user.last_name,
+                "phone_no": patient.user.phone_no,
+            },
+            "date": self.date,
+            # "amount": self.room.rent,
+        }
+
+        appointment_create_task.delay(info)

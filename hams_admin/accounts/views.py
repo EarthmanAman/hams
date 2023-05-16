@@ -71,7 +71,7 @@ class UserCreateView(CreateAPIView):
                 "phone_no": user.phone_no,
                 "uuid": user.uuid,
             }
-            if data["sms"] == True:
+            if data["sms"] == "true":
                 sms_verification.delay(info)
             else:
                 email_verification.delay(info)
@@ -103,7 +103,7 @@ class VerifyAccount(APIView):
                 user.save()
 
                 info = UserDetSer(user).data
-                user_to_appointment_task.delay(info)
+                user_to_appointment_task.delay("doctor_create", info)
                 return Response({"status": 200, "message":"Verified successfully"})
             else:
                 return Response({"status": 400, "message":"The code you entered is invalid"})
