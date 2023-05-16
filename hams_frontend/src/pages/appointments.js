@@ -11,6 +11,7 @@ class  Appointments extends React.Component {
         appointments: []
     }
 
+    
     componentDidMount =() => {
         const appointments = this.props.user_appointments.user_appointments != null ? this.props.user_appointments.user_appointments.doctor.appointments:[]
 
@@ -29,7 +30,7 @@ class  Appointments extends React.Component {
                         <p>Your upcoming appointments</p>
                         </div>
                         
-                        <Popup 
+                        {/* <Popup 
                             contentStyle={{background:"lightgrey", height:300, width: 300, marginTop:100, borderRadius:10}}
                             trigger={<button className='text-black bg-[#47bb92]'>NEW APPOINTMENT</button>}
                             position="left"
@@ -55,7 +56,7 @@ class  Appointments extends React.Component {
                                 </form>
                                 
                             </div>
-                        </Popup>
+                        </Popup> */}
                         {/* <Link href="">
                         <button className='text-black bg-[#47bb92]'>NEW APPOINTMENT</button>
                         </Link> */}

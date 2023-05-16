@@ -105,3 +105,50 @@ export const notification_api_stub_post = async (extension, api_body) => {
 
     }
 }
+
+
+export const notification_api_stub_put = async (extension, api_body) => {
+    // var token = store.getState().auth_reducer.token
+    try {
+        let raw_data = await fetch(`${HAMS_NOTIFICATION_URL}${extension}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                // "Authorization": `Token ${token.token}`
+            },
+            body: JSON.stringify(api_body)
+        });
+        let data = await raw_data.json();
+        raw_data = null;
+        return data
+    }
+    catch (error) {
+        console.log(error)
+        throw error;
+
+    }
+}
+
+export const notification_api_stub_delete = async (extension) => {
+    // var token = store.getState().auth_reducer.token
+    try {
+        let raw_data = await fetch(`${HAMS_NOTIFICATION_URL}${extension}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                // "Authorization": `Token ${token.token}`
+            },
+            // body: JSON.stringify(api_body)
+        });
+        // let data = await raw_data.json();
+        // raw_data = null;
+        // return data
+    }
+    catch (error) {
+        console.log(error)
+        throw error;
+
+    }
+}

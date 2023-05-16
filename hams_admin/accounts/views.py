@@ -61,7 +61,7 @@ class UserCreateView(CreateAPIView):
             if data["doctor"] == "true":
                 license_no = data.get("license_no", None)
                 fee = data.get("fee", None)
-                user1 = Doctor.objects.create(user=user, license_no=license_no, fee=Decimal(fee))
+                user1 = Doctor.objects.create(user=user, license_no=license_no, fee=Decimal(0))
             else:
                 user1 = Patient.objects.create(user=user, patient_type="self")
             

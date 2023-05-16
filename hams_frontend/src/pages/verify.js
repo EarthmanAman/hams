@@ -7,37 +7,39 @@ import Link from 'next/link';
 
 import Logo from "../../public/logo.png"
 import LoginImage from "../../public/login.png"
-import { loginAPI } from '@/redux/splices/loginSplice';
+
+import { verifyAPI } from '../redux/splices/verifySplice';
 import SpinnerComponent from '@/utils/spinner';
 
 
 const imageLoader = require("../loader");
-class  Login extends React.Component {
+class  Verify extends React.Component {
     state = {
-        username: null,
-        password: null
+        code: null,
     }
 
-    handleLogin = () => {
-        const {username, password} = this.state
+    handleVerify = async () => {
+        const {code} = this.state
 
         const context = {
-            "username": username,
-            "password": password,
+            "uuid": code,
         }
-        
-        const r = this.props.loginAPI(context)
+        console.log(context)
+        const r = await this.props.verifyAPI(context)
         
     }
 
+    codeChane = async(e) => {
+        await this.setState({code:e.target.value})
+    }
     render() {
         let error = undefined
         try {
-            error = this.props.user.user.non_field_errors
+            error = this.props.code.code.non_field_errors
         }catch(e){
             
         }
-        if(this.props.user.user.token != null){
+        if(this.props.code.code.status != null){
             this.props.router.push("/")
         }
         
@@ -49,22 +51,22 @@ class  Login extends React.Component {
                         <Image loader={imageLoader} src={LoginImage} className="w-auto h-[100%]" alt="about" />
                     </div>
                     <div className='relative flex-1 p-24 flex flex-col space-y-3 '>
-                        {this.props.user.isLoading == true ? 
+                        {this.props.code.isLoading == true ? 
                             <div className='absolute top-0 left-0 flex justify-center items-center h-[400px] w-[550px] bg-black bg-opacity-10 backdrop-blur-sm'>
                                 <SpinnerComponent visible={true} />
                             </div>
                         : null}
 
-                        <h4 className='mb-5 text-2xl'>LOGIN TO HOSPITAL APPOINTMNET MANAGEMENT SYSTEM</h4>
+                        <h4 className='mb-5 text-2xl'>ENTER VERIFICATION CODE</h4>
 
-                        {error != undefined ? <p className='text-red-600'>Unable to login with provided credentials</p>:null}
-                        <input placeholder='username' className='text-black border-2 rounded-md p-4' onChange={(text) => this.setState({username: text.target.value})}/>
-                        <input placeholder='password' type='password' className='text-black border-2 rounded-md p-4' onChange={(text) => this.setState({password: text.target.value})}/>
-                        <button className='bg-green-700 text-black p-4'  onClick={this.handleLogin}>Login</button>
+                        {error != undefined ? <p className='text-red-600'>Invalid code</p>:null}
+                        <input placeholder='Code' className='text-black border-2 rounded-md p-4' onChange={this.codeChane}/>
+                        
+                        <button className='bg-green-700 text-black p-4'  onClick={this.handleVerify}>Verify</button>
 
                         <div className='flex space-x-2 mt-3 items-center'>
-                            <p>Don't have an account?</p>
-                            <Link href={"/register"} className='text-blue-600'>Register</Link>
+                            <p>Back to login</p>
+                            <Link href={"/login"} className='text-blue-600'>Login</Link>
                         </div>
                     </div>
                 </div>
@@ -75,9 +77,9 @@ class  Login extends React.Component {
 
 
 const mapStateToProps = (state) => ({
-    user: state.user
+    code: state.code
   });
   
-  const mapDispatchToProps = { loginAPI};
+  const mapDispatchToProps = { verifyAPI };
   
-  export default withRouter( connect(mapStateToProps, mapDispatchToProps)(Login));
+  export default withRouter( connect(mapStateToProps, mapDispatchToProps)(Verify));

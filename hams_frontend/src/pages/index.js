@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
+import { withRouter } from 'next/router';
 import Layout from '@/components/layout'
 import Link from 'next/link'
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
@@ -9,12 +10,27 @@ import { connect } from "react-redux";
 import {MdCalendarMonth, MdTipsAndUpdates, MdPersonPin, MdDirectionsWalk, MdPhoneEnabled} from "react-icons/md"
 import {CiCalendarDate} from "react-icons/ci"
 import ApexChart from "@/components/chart";
+import { appointmentsAPI } from '@/redux/splices/appointmentsSplice';
 
 const inter = Inter({ subsets: ['latin'] })
 
 class Home extends React.Component{
+
+  componentDidMount =async () => {
+    try{
+      await this.props.appointmentsAPI(this.props.user.user.id)
+    }catch(e){
+      
+    }
+  }
   render(){
-    const appointments = this.props.user_appointments.user_appointments != null ? this.props.user_appointments.user_appointments.doctor.appointments:[]
+    let appointments = []
+    try{
+      appointments = this.props.user_appointments.user_appointments != null ? this.props.user_appointments.user_appointments.doctor.appointments:[]
+    }catch(e){
+      this.props.router.push("/login")
+    }
+    
     
   return (
     <Layout>
@@ -136,6 +152,6 @@ const mapStateToProps = (state) => ({
   user: state.user.user
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {appointmentsAPI};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default withRouter( connect(mapStateToProps, mapDispatchToProps)(Home));

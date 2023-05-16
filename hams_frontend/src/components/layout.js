@@ -7,7 +7,6 @@ import Link from 'next/link';
 import SpinnerComponent from '@/utils/spinner';
 
 import { appointmentsAPI } from '@/redux/splices/appointmentsSplice';
-import { testsAPI } from '@/redux/splices/testSplice';
 import Logo from "../../public/logo.png"
 import Avatar from "../../public/avatar.png"
 
@@ -72,12 +71,12 @@ class  Layout extends React.Component {
                             </div>
                         </Link>
 
-                        <Link href="">
+                        {/* <Link href="">
                             <div className='px-4 py-3 rounded-md flex space-x-2 items-center'>
                                 <MdPeopleAlt color='#5C5C5C' />
                                 <h6>My Patient</h6>
                             </div>
-                        </Link>
+                        </Link> */}
                         
                     </div>
                     
@@ -90,7 +89,7 @@ class  Layout extends React.Component {
                             <div className='w-8 h-8'>
                                 <Image loader={imageLoader} src={Avatar} className="w-[100%] h-auto" alt="about" />
                             </div>
-                            <h6>Dr Hashim</h6>
+                            <h6>Dr {this.props.user.user.first_name}</h6>
                         </div>
                         
                     </div>
@@ -107,6 +106,6 @@ const mapStateToProps = (state) => ({
     user: state.user.user
   });
   
-  const mapDispatchToProps = { appointmentsAPI, testsAPI};
+  const mapDispatchToProps = { appointmentsAPI};
   
   export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Layout));

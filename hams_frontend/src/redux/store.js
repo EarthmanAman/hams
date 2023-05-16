@@ -6,7 +6,8 @@ import thunk from 'redux-thunk';
 import loginSplice from './splices/loginSplice';
 import appointmentsSplice from './splices/appointmentsSplice';
 import appointmentDetSplice from './splices/appointmentDetSplice';
-import testSplice from './splices/testSplice';
+import registerSplice from './splices/registerSplice';
+import verifySplice from './splices/verifySplice';
 const persistConfig = {
   key: 'root',
   storage,
@@ -15,14 +16,16 @@ const persistConfig = {
 const loginSpliceR = persistReducer(persistConfig, loginSplice)
 const appointmentsSpliceR = persistReducer(persistConfig, appointmentsSplice)
 const appointmentDetSpliceR = persistReducer(persistConfig, appointmentDetSplice)
-const testSpliceR = persistReducer(persistConfig, testSplice)
+const verifySpliceR = persistReducer(persistConfig, verifySplice)
+const registerSpliceR = persistReducer(persistConfig, registerSplice)
 
 export const store = configureStore( {
   reducer: {
     user: loginSpliceR,
     user_appointments: appointmentsSpliceR,
     appointment: appointmentDetSpliceR,
-    // tests: testSpliceR,
+    register: registerSpliceR,
+    code: verifySpliceR
   },
   middleware: [thunk]
 

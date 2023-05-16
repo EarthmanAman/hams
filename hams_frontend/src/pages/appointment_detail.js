@@ -10,7 +10,8 @@ import Avatar from "../../public/avatar.png"
 import Image from 'next/image';
 import {MdTipsAndUpdates} from "react-icons/md"
 import React from 'react';
-import { notification_api_stub_get, notification_api_stub_post } from '@/api/_stub';
+import { notification_api_stub_get, notification_api_stub_post, notification_api_stub_delete, notification_api_stub_put} from '@/api/_stub';
+import { appointmentsAPI } from '@/redux/splices/appointmentsSplice';
 const imageLoader = require("../loader");
 class  AppointmentDetail extends React.Component {
 
@@ -25,7 +26,8 @@ class  AppointmentDetail extends React.Component {
         description: null,
         presD: null,
         presDesc: null,
-        med: null
+        med: null,
+        prescriptionId: null,
     }
 
     createDiagnosis = async () => {
@@ -46,6 +48,7 @@ class  AppointmentDetail extends React.Component {
         let ts = [data, ...diagnosis]
             // console.log(ts)
         this.setState({diagnosis: ts})
+        await this.props.appointmentsAPI(this.props.user.user.id)
     }
 
     createPrescription = async () => {
@@ -63,7 +66,44 @@ class  AppointmentDetail extends React.Component {
         let ts = [data, ...prescriptions]
             // console.log(ts)
         this.setState({prescriptions: ts})
+        await this.props.appointmentsAPI(this.props.user.user.id)
     }
+
+
+    updatePrescription = async (e, id) => {
+        let {med, presD, presDesc} = this.state
+        presD = parseInt(presD)
+        let data = {
+            appointment:presD,
+            description: presDesc,
+            name: med, 
+        }
+        console.log(data)
+        const response = await notification_api_stub_put(`/diagnosis/prescription/${id}/`, data)
+        let prescriptions = this.state.prescriptions
+        let d = this.state.diagnosis.find(item => parseInt(item.id) === presD);
+        let pres = prescriptions.filter(obj=>obj.id != id)
+        data["diagnosis"] = d
+        let ts = [data, ...pres]
+            // console.log(ts)
+        this.setState({prescriptions: ts})
+        await this.props.appointmentsAPI(this.props.user.user.id)
+    }
+
+
+    deletePrescription = async (e, id) => {
+        // const {prescriptionId} = this.state
+        console.log(id)
+       
+        const response = await notification_api_stub_delete(`/diagnosis/prescription/${id}/`)
+        let pres = this.state.prescriptions.filter(obj=>obj.id != id)
+        this.setState({
+            prescriptions:pres
+        })
+        await this.props.appointmentsAPI(this.props.user.user.id)
+    }
+
+
     createTest = async () => {
         const test = parseInt(this.state.test)
         const appointment = this.props.appointment.payload.id
@@ -81,7 +121,7 @@ class  AppointmentDetail extends React.Component {
             let ts = [...t, {test:test_item}]
             // console.log(ts)
             this.setState({appointment_tests: ts})
-            
+            await this.props.appointmentsAPI(this.props.user.user.id)
         }
     }
 
@@ -124,6 +164,12 @@ class  AppointmentDetail extends React.Component {
     componentDidMount = async() => {
         let tests = await notification_api_stub_get("/diagnosis/tests/")
         this.setState({tests:tests})
+        try{
+            await this.props.appointmentsAPI(this.props.user.user.id)
+        }catch(e){
+
+        }
+        
     }
     render() {
         const tests = this.state.tests
@@ -160,26 +206,7 @@ class  AppointmentDetail extends React.Component {
                         </div>
         
                         {/* RIGHT  */}
-                        <div className='flex space-x-3'>
-                            <Popup 
-                                contentStyle={{background:"grey", height:300, width: 300, marginTop:100, borderRadius:10}}
-                                trigger={<button className='bg-red-500'>CANCEL</button>}
-                                position="left"
-                            >
-                                <div>
-                                    <h4>Cancel</h4>
-                                </div>
-                            </Popup>
-                            
-                            <Popup 
-                                contentStyle={{background:"grey", height:300, width: 300, marginTop:100, borderRadius:10}}
-                                trigger={<button className='bg-[#47bb92]'>RESCHEDULE</button>}
-                                position="left"
-                            >
-                                <h4>Reschedule</h4>
-                            </Popup>
-                            
-                        </div>
+                        
                     </div>
         
                     <Tabs>
@@ -272,79 +299,7 @@ class  AppointmentDetail extends React.Component {
                                 
                             </div>
         
-                            <div className='bg-[#ffffff] p-5 mt-5'>
-                                <div>
-                                    <div>
-                                        <h4>Previous Visits</h4>
-                                    </div>
-        
-                                    {/* LIST  */}
-                                    <div className="p-1.5 w-full inline-block align-middle">
-                                        <div className="overflow-hidden border rounded-lg">
-                                            <table className="min-w-full divide-y divide-gray-200">
-                                                <thead className="bg-gray-50">
-                                                    <tr>
-                                                        <th
-                                                            scope="col"
-                                                            className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
-                                                        >
-                                                            DateTime
-                                                        </th>
-                                                        <th
-                                                            scope="col"
-                                                            className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
-                                                        >
-                                                            Tests Done
-                                                        </th>
-                                                        
-                                                        <th
-                                                            scope="col"
-                                                            className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
-                                                        >
-                                                            Diagnosis
-                                                        </th>
-        
-                                                        <th
-                                                            scope="col"
-                                                            className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
-                                                        >
-                                                            Prescription
-                                                        </th>
-        
-                                                        
-                                                       
-                                                    </tr>
-                                                </thead>
-        
-                                                <tbody className="divide-y divide-gray-200">
-                                                    <tr>
-                                                        
-                                                        <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap">
-                                                            John Doe
-                                                        </td>
-                                                        <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                                                            30
-                                                        </td>
-                                                        <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                                                            Male
-                                                        </td>
-        
-                                                        <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                                                            +254 79835 3456
-                                                        </td>
-        
-                                                        
-                                                    </tr>
-                                                    
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-        
-                                
-                            </div>
+                            
         
         
                         </TabPanel>
@@ -382,12 +337,12 @@ class  AppointmentDetail extends React.Component {
                                                             Date
                                                         </th> */}
                                                         
-                                                        <th
+                                                        {/* <th
                                                             scope="col"
                                                             className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
                                                         >
                                                             Findings
-                                                        </th>
+                                                        </th> */}
         
                                                         <th
                                                             scope="col"
@@ -413,9 +368,9 @@ class  AppointmentDetail extends React.Component {
                                                         {/* <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
                                                             13 May 2023
                                                         </td> */}
-                                                        <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
+                                                        {/* <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
                                                             Malaria positive
-                                                        </td>
+                                                        </td> */}
         
                                                         <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
                                                 
@@ -427,9 +382,9 @@ class  AppointmentDetail extends React.Component {
                                                                     </Link>
                                                                 </button> */}
         
-                                                                <button className="border-0 p-0">
+                                                                {/* <button className="border-0 p-0">
                                                                     <MdEditSquare size={20} color="blue"/>
-                                                                </button>
+                                                                </button> */}
         
                                                                 <button className="border-0 p-0"><MdDelete size={20} color="red"/></button>
                                                                     
@@ -637,12 +592,59 @@ class  AppointmentDetail extends React.Component {
                                                                     <MdRemoveRedEye size={20} color="blue"/>
                                                                     </Link>
                                                                 </button> */}
-            
-                                                                <button className="border-0 p-0">
+
+
+
+                                                                <Popup 
+                                                                    contentStyle={{background:"lightgrey", height:400, width: 300, marginTop:100, borderRadius:10}}
+                                                                    trigger={ <button className="border-0 p-0">
                                                                     <MdEditSquare size={20} color="blue"/>
-                                                                </button>
-            
-                                                                <button className="border-0 p-0"><MdDelete size={20} color="red"/></button>
+                                                                </button>}
+                                                                    position="left"
+                                                                >
+                                                                    <div className='p-5'>
+                                                                        <div className='border-b-[1px] pb-3 border-black'>
+                                                                            <h4>Update a Prescription</h4>
+                                                                        </div>
+                                                                        <div className='flex flex-col space-y-2'>
+                                                                            <label>Diagnosis</label>
+                                                                            <select value={this.state.diagnosis_selected} onChange={this.handleDChange}>
+                                                                                <option value={prescription.diagnosis.id}>{prescription.diagnosis.disease}</option>
+                                                                                {diagnosis.map((d) => 
+                                                                                    <option value={d.id}>{d.disease}</option>
+                                                                                )}
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div className='flex flex-col space-y-2'>
+                                                                            <label>Medication</label>
+                                                                            <input onChange={this.handleMedChange} className='bg-white' placeholder='medication' value={prescription.name}/>
+                                                                        </div>
+
+                                                                        <div className='flex flex-col space-y-2'>
+                                                                            <label>Description</label>
+                                                                            <textarea className='text-black' onChange={this.handlePreDescChange} rows={3}>{prescription.description}</textarea>
+                                                                        </div>
+
+                                                                        <button className='bg-blue-500 mt-3' onClick={(e) => this.updatePrescription(e, prescription.id)}>Update</button>
+                                                                        
+                                                                    </div>
+                                                                </Popup>
+                                                                
+                                                                
+                                                                <Popup 
+                                                                    contentStyle={{background:"lightgrey", height:200, width: 300, marginTop:100, borderRadius:10}}
+                                                                    trigger={ <button className="border-0 p-0"><MdDelete size={20} color="red"/></button>}
+                                                                    position="left"
+                                                                >
+                                                                    <div className='p-5'>
+                                                                        <div className='border-b-[1px] pb-3 border-black'>
+                                                                            <h4>Are you sure you want to delete (Click outside to cancel)</h4>
+                                                                        </div>
+                                                                        <button className='bg-red-600 mt-5' onClick={(e) => this.deletePrescription(e, prescription.id)}>Delete</button>
+                                                                    </div>
+                                                                </Popup>
+                                                                
                                                                     
                                                                     
                                                             
@@ -673,8 +675,9 @@ class  AppointmentDetail extends React.Component {
 const mapStateToProps = (state) => ({
     // user_appointments: state.user_appointments,
     appointment: state.appointment.appointment,
+    user: state.user.user
   });
   
-  const mapDispatchToProps = {};
+  const mapDispatchToProps = {appointmentsAPI};
   
   export default connect(mapStateToProps, mapDispatchToProps)(AppointmentDetail);

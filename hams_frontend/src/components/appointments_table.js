@@ -21,10 +21,10 @@ class AppointmentsTable extends React.Component {
     
                         <div>
                             <div>
-                                <form className='flex space-x-2'>
+                                {/* <form className='flex space-x-2'>
                                     <input placeholder='Search...' className='border-[1px] px-3 rounded-md border-black'/>
                                     <button className='text-black'>Submit</button>
-                                </form>
+                                </form> */}
                             </div>
                         </div>
                     </div>
