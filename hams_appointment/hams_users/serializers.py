@@ -2,6 +2,9 @@ from rest_framework.serializers import (
     ModelSerializer, 
 	SerializerMethodField,
 )
+from django.utils import timezone
+from datetime import timedelta
+from django.db.models import Count
 
 from . models import User, Patient, Doctor
 
@@ -19,6 +22,7 @@ class UserDetSer(ModelSerializer):
         fields = [
             "id",
             "user_id",
+            "username",
             "first_name",
             "last_name",
             "email",
@@ -90,16 +94,34 @@ class DoctorSer(ModelSerializer):
 
 class DoctorDetSer(ModelSerializer):
     appointments = SerializerMethodField()
+    totals = SerializerMethodField()
     class Meta:
         model = Doctor
         fields = [
             "id",
             "appointments",
             "license_no",
-            "fee"
+            "fee",
+            "totals",
         ]
     
     def get_appointments(self, obj):
         from appointment.serializers import AppointmentDetSer
         return AppointmentDetSer(obj.appointment_set.all(), many=True).data
     
+    def get_totals(self, obj):
+        current_date = timezone.now().date()
+        end_date = current_date + timedelta(days=7)
+
+        count_by_date = (
+        obj.appointment_set.filter(date__range=[current_date, end_date])
+            .extra({'date': "date(date)"})
+            .values('date')
+            .annotate(count=Count('date'))
+        )
+
+        counts = [date["count"] for date in count_by_date]
+
+
+        return counts
+

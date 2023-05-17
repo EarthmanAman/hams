@@ -18,3 +18,8 @@ def email_verification(info):
 def user_to_appointment_task(method, info):
     
     return user_to_appointment(method, info)
+
+@shared_task
+def password_change_task(method, info):
+    
+    return verification(method, info)

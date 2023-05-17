@@ -1,11 +1,12 @@
 from decimal import Decimal
 import uuid
+from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import (
 	CreateAPIView,
-	ListAPIView,
+	ListAPIView,UpdateAPIView,
 	RetrieveUpdateDestroyAPIView,
 )
 
@@ -19,9 +20,9 @@ from rest_framework.status import (
 	)
 from hams_users.models import Doctor, Patient
 from .models import User
-from .serializers import UserCreateSer, UserDetSer, MyTokenObtainPairSerializer
+from .serializers import UserCreateSer, UserDetSer, MyTokenObtainPairSerializer, ChangePasswordSerializer
 
-from .tasks import sms_verification, email_verification, user_to_appointment_task
+from .tasks import sms_verification, email_verification, user_to_appointment_task, password_change_task
 
 
 
@@ -88,6 +89,7 @@ class UserCreateView(CreateAPIView):
 class UserUpdateView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserDetSer
     queryset = User.objects.all()
+    permission_classes = [IsAuthenticated]
     
 class VerifyAccount(APIView):
 
@@ -107,3 +109,25 @@ class VerifyAccount(APIView):
                 return Response({"status": 200, "message":"Verified successfully"})
             else:
                 return Response({"status": 400, "message":"The code you entered is invalid"})
+            
+
+class ChangePasswordView(UpdateAPIView):
+    serializer_class = ChangePasswordSerializer
+    queryset = User.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        user = User.objects.filter(id=int(self.kwargs["pk"]))
+
+        if user.exists():
+            user = user.last()
+            old_password = request.data.get("old_password")
+            if user.check_password(old_password):
+
+                password = request.data.get("new_password")
+                user.set_password(password)
+                user.save()
+                password_change_task.delay("password_change", {"name": user.first_name})
+                return Response({"status":204, "message":"Password Changed Successfully"})
+            return Response({"status":400, "message": "Old Password is incorrect"})
+        else:
+            return Response({"status":400, "message": "User does not exist"})

@@ -60,4 +60,4 @@ class Patient(DteCrModAbs):
     dob             = models.DateField(null=True, blank=True)
 
     def __str__(self) -> str:
-        return  ' :- ' + self.patient_type
+        return str(self.user.username) + ' :- ' + self.patient_type

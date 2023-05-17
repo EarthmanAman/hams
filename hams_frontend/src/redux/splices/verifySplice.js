@@ -16,7 +16,9 @@ export const verifyApi = createAsyncThunk(
 const verifySplice = createSlice({
   name: 'code',
   initialState,
-  reducers: {},
+  reducers: {
+    
+  },
 
   extraReducers: (builder) => {
     builder.addCase(verifyApi.pending, (state) => {

@@ -13,9 +13,13 @@ class  Appointments extends React.Component {
 
     
     componentDidMount =() => {
-        const appointments = this.props.user_appointments.user_appointments != null ? this.props.user_appointments.user_appointments.doctor.appointments:[]
-
-        this.setState({appointments:appointments})
+        let appointments = this.props.user_appointments.user_appointments != null ? this.props.user_appointments.user_appointments:[]
+        if(appointments.doctor != undefined || appointments.doctor !==null){
+            this.setState({appointments:appointments.doctor.appointments})
+        }else {
+            this.setState({appointments:[]})
+        }
+        
     }
     render(){
         const {appointments} = this.state

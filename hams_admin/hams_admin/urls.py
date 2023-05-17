@@ -7,6 +7,12 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+admin.site.site_header = "HAMS Admin Site"
+admin.site.site_title = "HAMS Admin"
+admin.site.index_title = "Welcome to Admin Panel"
+
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include("accounts.urls", namespace="accounts")),

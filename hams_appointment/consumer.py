@@ -7,7 +7,7 @@ import pika
 import json
 from django.conf import settings
 
-from hams_users.tasks import users_to_appointment_doctor_task
+from hams_users.tasks import users_to_appointment_doctor_task, users_to_appointment_user_update_task
 
 # Connection parameters
 url = settings.RABBITMQ_BROKER_URL
@@ -30,6 +30,8 @@ def callback(ch, method, properties, body):
     print(body)
     if  content_type == "doctor_create":
         users_to_appointment_doctor_task.delay(body)
+    if  content_type == "user_update":
+        users_to_appointment_user_update_task.delay(body)
     # elif content_type == "email_verification":
     #     email_verification_task.delay(body)
     

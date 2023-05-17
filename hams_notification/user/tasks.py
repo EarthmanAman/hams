@@ -75,3 +75,49 @@ def appoinment_create_task(info):
         recipient_list=[doctor["email"]],
         fail_silently=False,
     )
+
+@shared_task 
+def update_user_task(info):
+    client = Client(account_sid, auth_token)
+    message = f"\n Dear Dr {info['first_name']} \n\n Your information was updated successfully\nIf you didn't update your information please contact the admin\n\n"
+
+    message = client.messages.create(
+        to=f"+254798352592",
+        from_="+16206791392",
+        body=message
+        )
+    return message.sid
+
+
+@shared_task 
+def password_change_task(info):
+    client = Client(account_sid, auth_token)
+    message = f"\n\nDear Dr {info['name']} \n\nYour Password was updated successfully\nIf you didn't update your information please contact the admin\n\n"
+
+    message = client.messages.create(
+        to=f"+254798352592",
+        from_="+16206791392",
+        body=message
+        )
+    return message.sid
+
+
+
+@shared_task
+def daily_reminder_task(info):
+    apps = info["apps"]
+    name = info["name"]
+    email = info["email"]
+    message = f"\n Dear Dr {name} \n\nBelow is a summary of your appointments today.\n\n\tPatient\tTime"
+    for app in apps:
+        message += f"\t{app['patient']}\t{app['time']}"
+    
+    
+    subject = f"APPOINTMENTS TODAY"
+    send_mail(
+        subject= subject,
+        from_email="hashimathman.info@gmail.com",
+        message=message,
+        recipient_list=[email],
+        fail_silently=False,
+    )

@@ -7,7 +7,11 @@ import pika
 import json
 from django.conf import settings
 
-from user.tasks import appoinment_create_task, user_doctor_task, user_patient_task, sms_verification_task, email_verification_task
+from user.tasks import (
+    appoinment_create_task, user_doctor_task, 
+    user_patient_task, sms_verification_task, email_verification_task,
+    update_user_task,password_change_task,daily_reminder_task,
+)
 
 
 # Connection parameters
@@ -37,6 +41,14 @@ def callback(ch, method, properties, body):
         user_doctor_task.delay(body)
     elif content_type == "appointment_create":
         appoinment_create_task.delay(body)
+    elif content_type == "update_user":
+        update_user_task.delay(body)
+    
+    elif content_type == "password_change":
+        password_change_task.delay(body)
+    elif content_type == "daily_reminder":
+        daily_reminder_task.delay(body)
+    
     
     ch.basic_ack(delivery_tag = method.delivery_tag)
 

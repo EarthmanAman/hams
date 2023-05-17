@@ -71,7 +71,7 @@ class  Register extends React.Component {
                     </div>
                     <div className='relative flex-1 p-24 flex flex-col space-y-3 '>
                         {this.props.register.isLoading == true ? 
-                            <div className='absolute top-0 left-0 flex justify-center items-center h-[400px] w-[550px] bg-black bg-opacity-10 backdrop-blur-sm'>
+                            <div className='absolute top-0 left-0 flex justify-center items-center h-full w-full bg-black bg-opacity-10 backdrop-blur-sm'>
                                 <SpinnerComponent visible={true} />
                             </div>
                         : null}
@@ -80,6 +80,7 @@ class  Register extends React.Component {
 
                         {error != undefined ? <p className='text-red-600'>Unable to login with provided credentials</p>:null}
                         {this.state.null_error === true ? <p className='text-red-600'>Some fields are empty. PLease fill them</p>:null}
+                        
                         <div className='flex space-x-3'>
                             <div className='flex-1'>
                                 <input placeholder='username' className='text-black border-2 rounded-md p-2 w-[100%]' onChange={(text) => this.setState({username: text.target.value})}/>

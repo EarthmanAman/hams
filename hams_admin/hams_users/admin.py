@@ -8,6 +8,6 @@ from . models import (
 )
 
 admin.site.register(Doctor)
-admin.site.register(DoctorSpeciality)
-admin.site.register(Patient)
-admin.site.register(Speciality)
+# admin.site.register(DoctorSpeciality)
+# admin.site.register(Patient)
+# admin.site.register(Speciality)

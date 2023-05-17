@@ -51,6 +51,44 @@ class  AppointmentDetail extends React.Component {
         await this.props.appointmentsAPI(this.props.user.user.id)
     }
 
+    updateDiagnosis = async (e, id) => {
+        const {disease, description} = this.state
+        const idd = parseInt(id)
+        const today = new Date()
+        const fullDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        const time = today.getHours() + ':' + today.getMinutes()
+        let data = {
+            disease:disease,
+            description: description,
+            appointment: idd,
+            date: fullDate,
+            time: time,
+        }
+        
+        // const response = await notification_api_stub_put(`/diagnosis/${idd}/`, data)
+        let diagnosis = this.state.diagnosis
+        let d = this.state.diagnosis.find(item => parseInt(item.id) === idd);
+        console.log(d)
+        let pres = diagnosis.filter(obj=>obj.id != idd)
+        
+        let ts = [data, ...pres]
+            // console.log(ts)
+        this.setState({diagnosis: ts})
+        await this.props.appointmentsAPI(this.props.user.user.id)
+    }
+
+    deleteDiagnosis = async (e, id) => {
+        // const {prescriptionId} = this.state
+        console.log(id)
+       
+        const response = await notification_api_stub_delete(`/diagnosis/${id}/`)
+        let pres = this.state.diagnosis.filter(obj=>obj.id != id)
+        this.setState({
+            diagnosis:pres
+        })
+        await this.props.appointmentsAPI(this.props.user.user.id)
+    }
+
     createPrescription = async () => {
         let {med, presD, presDesc} = this.state
         presD = parseInt(presD)
@@ -82,6 +120,7 @@ class  AppointmentDetail extends React.Component {
         const response = await notification_api_stub_put(`/diagnosis/prescription/${id}/`, data)
         let prescriptions = this.state.prescriptions
         let d = this.state.diagnosis.find(item => parseInt(item.id) === presD);
+        console.log(d)
         let pres = prescriptions.filter(obj=>obj.id != id)
         data["diagnosis"] = d
         let ts = [data, ...pres]
@@ -458,11 +497,48 @@ class  AppointmentDetail extends React.Component {
                                             </div>
                                         </div>
                                         <div className='flex space-x-4'>
-                                            <button className="border-0 p-0">
-                                                <MdEditSquare size={20} color="blue"/>
-                                            </button>
-            
-                                            <button className="border-0 p-0"><MdDelete size={20} color="red"/></button>
+
+                                                <Popup 
+                                                contentStyle={{background:"lightgrey", height:350, width: 320, marginTop:100, borderRadius:10}}
+                                                trigger={<button className="border-0 p-0"><MdEditSquare size={20} color="blue"/></button>}
+                                                position="left"
+                                            >
+                                                <div className='p-5'>
+                                                    <div className='border-b-[1px] pb-3 border-black'>
+                                                        <h4>Update a Diagnosis</h4>
+                                                    </div>
+
+                                                    <div>
+                                                        <div className='flex flex-col space-y-2'>
+                                                            <label>Disease</label>
+                                                            <input placeholder='Disease' defaultValue={d.disease} className='bg-white' onChange={this.handleDiseaseChange}/>
+                                                        </div>
+
+                                                        <div className='flex flex-col space-y-2'>
+                                                            <label>Description</label>
+                                                            <textarea className='text-black' rows={3} defaultValue={d.description} onChange={this.handleDescriptionChange}></textarea>
+                                                        </div>
+                                                        
+                                                        <button className='bg-blue-500 mt-5' onClick={this.createDiagnosis}>Update</button>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </Popup>
+                                            
+                                            
+                                            <Popup 
+                                                contentStyle={{background:"lightgrey", height:200, width: 300, marginTop:100, borderRadius:10}}
+                                                trigger={ <button className="border-0 p-0"><MdDelete size={20} color="red"/></button>}
+                                                position="left"
+                                            >
+                                                <div className='p-5'>
+                                                    <div className='border-b-[1px] pb-3 border-black'>
+                                                        <h4>Are you sure you want to delete (Click outside to cancel)</h4>
+                                                    </div>
+                                                    <button className='bg-red-600 mt-5' onClick={(e) => this.deleteDiagnosis(e, d.id)}>Delete</button>
+                                                </div>
+                                            </Popup>
+                                            
                                                 
                                         </div>
                                         
@@ -618,12 +694,12 @@ class  AppointmentDetail extends React.Component {
 
                                                                         <div className='flex flex-col space-y-2'>
                                                                             <label>Medication</label>
-                                                                            <input onChange={this.handleMedChange} className='bg-white' placeholder='medication' value={prescription.name}/>
+                                                                            <input onChange={this.handleMedChange} className='bg-white' placeholder='medication' defaultValue={prescription.name}/>
                                                                         </div>
 
                                                                         <div className='flex flex-col space-y-2'>
                                                                             <label>Description</label>
-                                                                            <textarea className='text-black' onChange={this.handlePreDescChange} rows={3}>{prescription.description}</textarea>
+                                                                            <textarea className='text-black' onChange={this.handlePreDescChange} rows={3} defaultValue={prescription.description}></textarea>
                                                                         </div>
 
                                                                         <button className='bg-blue-500 mt-3' onClick={(e) => this.updatePrescription(e, prescription.id)}>Update</button>

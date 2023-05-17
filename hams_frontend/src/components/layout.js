@@ -1,11 +1,11 @@
 import React from 'react';
 import { withRouter } from 'next/router';
 import Image from 'next/image'
-import {MdDashboard, MdCalendarMonth, MdPeopleAlt} from "react-icons/md"
+import {MdDashboard, MdCalendarMonth, MdPeopleAlt, MdLogout} from "react-icons/md"
 import { connect } from "react-redux";
 import Link from 'next/link';
 import SpinnerComponent from '@/utils/spinner';
-
+import { logOutReducer } from '@/redux/splices/loginSplice';
 import { appointmentsAPI } from '@/redux/splices/appointmentsSplice';
 import Logo from "../../public/logo.png"
 import Avatar from "../../public/avatar.png"
@@ -14,6 +14,10 @@ import Avatar from "../../public/avatar.png"
 const imageLoader = require("../loader");
 class  Layout extends React.Component {
 
+    logOut = async() => {
+        await this.props.logOutReducer()
+        this.props.router.push("/login")
+    }
     componentDidMount = async() => {
         try{
             await this.props.appointmentsAPI(this.props.user.user.id)
@@ -27,7 +31,7 @@ class  Layout extends React.Component {
         
     }
     render() {
-        console.log(this.props.user)
+        // console.log(this.props.user)
         // if(this.props.user.token == null){
         //     this.props.router.push("/login")
         // }
@@ -36,7 +40,7 @@ class  Layout extends React.Component {
             <div className='bg-[#f7f7f7] min-h-[700px] flex space-x-3'>
 
                 {this.props.user_appointments.isLoading == true ? 
-                    <div className='absolute top-0 left-0 flex justify-center items-center h-[400px] w-[550px] bg-black bg-opacity-10 backdrop-blur-sm'>
+                    <div className='absolute top-0 left-0 flex justify-center items-center h-full w-full bg-black bg-opacity-10 backdrop-blur-sm'>
                         <SpinnerComponent visible={true} />
                     </div>
                 : null}
@@ -71,12 +75,19 @@ class  Layout extends React.Component {
                             </div>
                         </Link>
 
-                        {/* <Link href="">
+                        <Link href="/account">
                             <div className='px-4 py-3 rounded-md flex space-x-2 items-center'>
                                 <MdPeopleAlt color='#5C5C5C' />
-                                <h6>My Patient</h6>
+                                <h6>Account</h6>
                             </div>
-                        </Link> */}
+                        </Link>
+
+                       
+                        <div className='px-4 py-3 rounded-md flex space-x-2 items-center' onClick={this.logOut}>
+                            <MdLogout color='#5C5C5C' />
+                            <h6>Log out</h6>
+                        </div>
+                     
                         
                     </div>
                     
@@ -89,7 +100,7 @@ class  Layout extends React.Component {
                             <div className='w-8 h-8'>
                                 <Image loader={imageLoader} src={Avatar} className="w-[100%] h-auto" alt="about" />
                             </div>
-                            <h6>Dr {this.props.user.user.first_name}</h6>
+                            <h6>Dr {this.props.user_appointments.user_appointments.first_name}</h6>
                         </div>
                         
                     </div>
@@ -106,6 +117,6 @@ const mapStateToProps = (state) => ({
     user: state.user.user
   });
   
-  const mapDispatchToProps = { appointmentsAPI};
+  const mapDispatchToProps = { appointmentsAPI, logOutReducer};
   
   export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Layout));

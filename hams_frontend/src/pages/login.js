@@ -50,7 +50,7 @@ class  Login extends React.Component {
                     </div>
                     <div className='relative flex-1 p-24 flex flex-col space-y-3 '>
                         {this.props.user.isLoading == true ? 
-                            <div className='absolute top-0 left-0 flex justify-center items-center h-[400px] w-[550px] bg-black bg-opacity-10 backdrop-blur-sm'>
+                            <div className='absolute top-0 left-0 flex justify-center items-center h-full w-full bg-black bg-opacity-10 backdrop-blur-sm'>
                                 <SpinnerComponent visible={true} />
                             </div>
                         : null}

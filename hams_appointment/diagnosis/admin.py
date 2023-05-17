@@ -9,9 +9,9 @@ from . models import (
     AppointmentTest,
 )
 
-admin.site.register(Disease)
+# admin.site.register(Disease)
 admin.site.register(Test)
 admin.site.register(Diagnosis)
-admin.site.register(DiagnosedDisease)
+# admin.site.register(DiagnosedDisease)
 admin.site.register(Prescription)
 admin.site.register(AppointmentTest)

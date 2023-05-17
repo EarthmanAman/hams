@@ -13,10 +13,16 @@ export const loginAPI = createAsyncThunk(
   }
 )
 
+
+
 const loginSplice = createSlice({
   name: 'login',
   initialState,
-  reducers: {},
+  reducers: {
+    logOutReducer(state){
+      state.user = initialState
+    }
+  },
 
   extraReducers: (builder) => {
     builder.addCase(loginAPI.pending, (state) => {
@@ -33,5 +39,7 @@ const loginSplice = createSlice({
   },
   
 })
+
+export const {logOutReducer} = loginSplice.actions
 
 export default loginSplice.reducer

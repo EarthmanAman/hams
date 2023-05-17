@@ -25,9 +25,14 @@ class Home extends React.Component{
   }
   render(){
     let appointments = []
-    try{
-      appointments = this.props.user_appointments.user_appointments != null ? this.props.user_appointments.user_appointments.doctor.appointments:[]
-    }catch(e){
+    let propsApps = this.props.user_appointments.user_appointments
+    console.log(propsApps)
+    if(propsApps != null){
+      if(propsApps.doctor != undefined || propsApps.doctor != null){
+        appointments = this.props.user_appointments.user_appointments.doctor.appointments
+      }
+    }
+    else if(this.props.user.user.token == null){
       this.props.router.push("/login")
     }
     
