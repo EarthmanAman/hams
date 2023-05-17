@@ -7,7 +7,7 @@ import Link from 'next/link'
 import 'react-modern-calendar-datepicker/lib/DatePicker.css';
 import { Calendar } from "react-modern-calendar-datepicker";
 import { connect } from "react-redux";
-import {MdCalendarMonth, MdTipsAndUpdates, MdPersonPin, MdDirectionsWalk, MdPhoneEnabled} from "react-icons/md"
+import {MdCalendarMonth, MdEmail, MdTipsAndUpdates, MdPersonPin, MdDirectionsWalk, MdPhoneEnabled} from "react-icons/md"
 import {CiCalendarDate} from "react-icons/ci"
 import ApexChart from "@/components/chart";
 import { appointmentsAPI } from '@/redux/splices/appointmentsSplice';
@@ -25,11 +25,13 @@ class Home extends React.Component{
   }
   render(){
     let appointments = []
+    let totals = [0,0,0,0,0,0,0]
     let propsApps = this.props.user_appointments.user_appointments
     console.log(propsApps)
     if(propsApps != null){
       if(propsApps.doctor != undefined || propsApps.doctor != null){
         appointments = this.props.user_appointments.user_appointments.doctor.appointments
+        totals = this.props.user_appointments.user_appointments.doctor.totals != undefined ? this.props.user_appointments.user_appointments.doctor.totals : [0,0,0,0,0,0,0]
       }
     }
     else if(this.props.user.user.token == null){
@@ -83,20 +85,20 @@ class Home extends React.Component{
                     
 
                     <div className='flex space-x-2 items-center'>
-                      <MdPersonPin />
-                      <p>Gender - Male</p>
+                      <MdPhoneEnabled color="black" />
+                      <p>Phone - {appointment.patient.user.phone_no}</p>
                     </div>
 
                     <div className='flex space-x-2 items-center'>
-                      <MdDirectionsWalk />
-                      <p>Visits - 4</p>
+                      <MdEmail color="black"/>
+                      <p>Email - {appointment.patient.user.email}</p>
                     </div>
 
                   </div>
 
-                  <div className='flex flex-col space-y-4'>
+                  {/* <div className='flex flex-col space-y-4'>
                     <div className='flex space-x-2 items-center'>
-                      <MdTipsAndUpdates />
+                      <MdTipsAndUpdates color="black"/>
                       <p>Age - 30 years</p>
                     </div>
 
@@ -105,7 +107,7 @@ class Home extends React.Component{
                       <p>+254 79835 2592</p>
                     </div>
 
-                  </div>
+                  </div> */}
 
                 </div>
 
@@ -136,7 +138,7 @@ class Home extends React.Component{
               </div>
             </div>
 
-            <ApexChart />
+            <ApexChart totals={totals}/>
 
           </div>
         </div>

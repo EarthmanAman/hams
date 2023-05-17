@@ -12,7 +12,7 @@ class ApexChart extends React.Component {
       
         series: [{
           name: 'Inflation',
-          data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
+          data: this.props.totals
         }],
         options: {
           chart: {
@@ -30,7 +30,7 @@ class ApexChart extends React.Component {
           dataLabels: {
             enabled: true,
             formatter: function (val) {
-              return val + "%";
+              return val;
             },
             offsetY: -20,
             style: {
@@ -40,7 +40,7 @@ class ApexChart extends React.Component {
           },
           
           xaxis: {
-            categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            categories: ["WED", "THUR", "FRI", "SAT", "SUN", "MON", "TUE"],
             position: 'top',
             axisBorder: {
               show: false
@@ -80,7 +80,7 @@ class ApexChart extends React.Component {
           
           },
           title: {
-            text: 'Monthly Inflation in Argentina, 2002',
+            text: 'Weekly Appointments',
             floating: true,
             offsetY: 330,
             align: 'center',

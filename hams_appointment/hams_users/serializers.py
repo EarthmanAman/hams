@@ -121,7 +121,7 @@ class DoctorDetSer(ModelSerializer):
         )
 
         counts = [date["count"] for date in count_by_date]
-
+        counts.extend([0] * (7 - len(counts)))
 
         return counts
 
