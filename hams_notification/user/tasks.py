@@ -8,7 +8,7 @@ import os
 load_dotenv()
 # Your Account SID and Auth Token from console.twilio.com
 account_sid = "ACbca27343716894de4a14fb24505a7fb6"
-auth_token = "fe7b3d794c2c7c4a9257db1ba83cb9fb"
+auth_token = "b5cf188b1ad423023a13e0e5a2584fa0"
 
 
 @shared_task

@@ -89,7 +89,7 @@ class UserCreateView(CreateAPIView):
 class UserUpdateView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserDetSer
     queryset = User.objects.all()
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
     
 class VerifyAccount(APIView):
 

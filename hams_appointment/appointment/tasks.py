@@ -15,7 +15,7 @@ def appointment_create_task(info):
 def daily_reminder_task():
     from . models import Doctor
     for doctor in Doctor.objects.all():
-        appointments = doctor.appointment_set.filter(date__date=datetime.date.today())
+        appointments = doctor.appointment_set.all()
         apps = []
         for appointment in appointments:
             info = {

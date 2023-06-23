@@ -451,7 +451,7 @@ class  AppointmentDetail extends React.Component {
                                         
                                     </form>
                                     <Popup 
-                                        contentStyle={{background:"lightgrey", height:350, width: 320, marginTop:100, borderRadius:10}}
+                                        contentStyle={{background:"yellow", height:350, width: 320, marginTop:100, borderRadius:10}}
                                         trigger={<button className='bg-[#47bb92] ml-3'>ADD DIAGNOSIS</button>}
                                         position="left"
                                     >

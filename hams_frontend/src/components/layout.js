@@ -100,7 +100,7 @@ class  Layout extends React.Component {
                             <div className='w-8 h-8'>
                                 <Image loader={imageLoader} src={Avatar} className="w-[100%] h-auto" alt="about" />
                             </div>
-                            <h6>Dr {this.props.user_appointments.user_appointments.first_name}</h6>
+                            {/* <h6>Dr {this.props.user_appointments.user_appointments.first_name}</h6> */}
                         </div>
                         
                     </div>
